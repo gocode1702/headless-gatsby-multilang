@@ -55,7 +55,7 @@ const PageWrapper = (props) => {
     pageNumber,
   } = useContext(LangContext);
 
-  const defaultLanguage = useLanguages();
+  const { defaultLanguage } = useLanguages();
 
   const { siteUrl } = useSiteUrl();
 
@@ -70,7 +70,7 @@ const PageWrapper = (props) => {
           rel="manifest"
           href={
             currentLanguage === defaultLanguage
-              ? "/manifest.webmanifest"
+              ? `/manifest.webmanifest`
               : `/manifest_${currentLanguage}.webmanifest`
           }
           crossOrigin="anonymous"
