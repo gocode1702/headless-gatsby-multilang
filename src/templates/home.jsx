@@ -1,3 +1,5 @@
+import React from "react";
+
 import { graphql } from "gatsby";
 
 import PageWrapper from "../components/layout/pageWrapper";

@@ -1,4 +1,4 @@
-import { useState, useContext, Fragment } from "react";
+import React, { useState, useContext, Fragment } from "react";
 
 import { graphql, useStaticQuery, Link } from "gatsby";
 
