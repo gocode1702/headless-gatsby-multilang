@@ -14,7 +14,7 @@ export const HeroAlt = styled.h2`
 export const HeroTitle = styled.h1`
   font-size: var(--headingXXL);
   color: var(--headingsColor);
-  text-align: ${(props) => (props.centered ? "center" : "left")};
+  text-align: ${({ centered }) => (centered ? "center" : "left")};
   line-height: var(--headingsHeight);
 
   @media screen and (max-width: 768px) {
@@ -25,7 +25,7 @@ export const HeroTitle = styled.h1`
 export const HeroSubtitle = styled.p`
   font-size: var(--baseXL);
   color: var(--baseTextColor);
-  text-align: ${(props) => (props.centered ? "center" : "left")};
+  text-align: ${({ centered }) => (centered ? "center" : "left")};
   line-height: var(--paragraphHeight);
 `;
 
@@ -86,11 +86,11 @@ export const HeadingSmall = styled.h1`
   position: relative;
   --tipWidth: 3px;
   height: min-content;
-  padding-left: ${(props) => props.hasTip && "calc(var(--tipWidth) * 3)"};
+  padding-left: ${({ hasTip }) => hasTip && "calc(var(--tipWidth) * 3)"};
 
   &::before {
-    ${(props) =>
-      props.hasTip &&
+    ${({ hasTip }) =>
+      hasTip &&
       `
           width: var(--tipWidth);
           border-radius: var(--tipWidth);

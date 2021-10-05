@@ -38,17 +38,15 @@ const Footer = () => {
   const data = useStaticQuery(graphql`
     query FooterQuery {
       allDatoCmsFooter {
-        edges {
-          node {
-            id: originalId
-            textLeft {
-              value
-            }
-            textRight {
-              value
-            }
-            locale
+        nodes {
+          id: originalId
+          textLeft {
+            value
           }
+          textRight {
+            value
+          }
+          locale
         }
       }
     }
@@ -60,15 +58,15 @@ const Footer = () => {
     <SectionWrapper as="footer">
       <Divider top />
       <FooterContainer>
-        {data.allDatoCmsFooter.edges
-          .filter((edge) => edge.node.locale === currentLanguage)
-          .map((edge) => (
-            <Fragment key={edge.node.id}>
+        {data.allDatoCmsFooter.nodes
+          .filter((node) => node.locale === currentLanguage)
+          .map((node) => (
+            <Fragment key={node.id}>
               <Paragraph small centered as="div">
-                <StructuredText data={edge.node.textLeft.value} />
+                <StructuredText data={node.textLeft.value} />
               </Paragraph>
               <Paragraph small centered as="div">
-                <StructuredText data={edge.node.textRight.value} />
+                <StructuredText data={node.textRight.value} />
               </Paragraph>
             </Fragment>
           ))}

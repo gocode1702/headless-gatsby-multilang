@@ -18,25 +18,31 @@ import Header from "../ui/header";
 
 import Footer from "../ui/footer";
 
-const PageWrapper = (props) => {
+const PageWrapper = ({
+  noHeader,
+  noFooter,
+  hasSubsequent,
+  children,
+  seoTitle,
+  seoDescription,
+  seoImage,
+}) => {
   const data = useStaticQuery(graphql`
     query SeoQuery {
       allDatoCmsWebsiteSetting {
-        edges {
-          node {
-            locale
-            siteUrl
-            title
-            separator
-            pageName
-            archiveName
-            fallbackDescription
-            defaultOgImage {
-              url
-            }
-            primaryColor {
-              hex
-            }
+        nodes {
+          locale
+          siteUrl
+          title
+          separator
+          pageName
+          archiveName
+          fallbackDescription
+          defaultOgImage {
+            url
+          }
+          primaryColor {
+            hex
           }
         }
       }
@@ -78,7 +84,7 @@ const PageWrapper = (props) => {
 
         <meta
           name="theme-color"
-          content={data.allDatoCmsWebsiteSetting.edges[0].node.primaryColor.hex}
+          content={data.allDatoCmsWebsiteSetting.nodes[0].primaryColor.hex}
         />
         <link rel="icon" href="/favicon-32.png" type="image/png" />
         <link
@@ -98,77 +104,77 @@ const PageWrapper = (props) => {
         <meta property="og:type" content="blog" />
         <meta property="twitter:url" content={`${siteUrl}${pathname}`} />
 
-        {data.allDatoCmsWebsiteSetting.edges
-          .filter((edge) => edge.node.locale === currentLanguage)
-          .map((edge) => [
+        {data.allDatoCmsWebsiteSetting.nodes
+          .filter((node) => node.locale === currentLanguage)
+          .map((node) => [
             <title>
-              {(props.seoTitle && homeDef) ||
-              (props.seoTitle && homeSec) ||
-              (props.seoTitle && isPage) ||
-              (props.seoTitle && isArchiveRoot)
-                ? `${props.seoTitle} ${edge.node.separator} ${edge.node.title}`
-                : props.seoTitle && isPost
-                ? `${props.seoTitle} ${edge.node.separator} ${edge.node.archiveName} ${edge.node.separator} ${edge.node.title}`
-                : props.seoTitle && isPaginatedArchive
-                ? `${edge.node.pageName} ${pageNumber} ${edge.node.separator} ${props.seoTitle} ${edge.node.separator} ${edge.node.title}`
-                : edge.node.title}
+              {(seoTitle && homeDef) ||
+              (seoTitle && homeSec) ||
+              (seoTitle && isPage) ||
+              (seoTitle && isArchiveRoot)
+                ? `${seoTitle} ${node.separator} ${node.title}`
+                : seoTitle && isPost
+                ? `${seoTitle} ${node.separator} ${node.archiveName} ${node.separator} ${node.title}`
+                : seoTitle && isPaginatedArchive
+                ? `${node.pageName} ${pageNumber} ${node.separator} ${seoTitle} ${node.separator} ${node.title}`
+                : node.title}
             </title>,
             <meta
               name="description"
-              content={props.seoDescription || edge.node.fallbackDescription}
+              content={seoDescription || node.fallbackDescription}
             />,
             <meta
               property="og:title"
               content={
-                (props.seoTitle && homeDef) ||
-                (props.seoTitle && homeSec) ||
-                (props.seoTitle && isPage) ||
-                (props.seoTitle && isArchiveRoot)
-                  ? `${props.seoTitle} ${edge.node.separator} ${edge.node.title}`
-                  : props.seoTitle && isPost
-                  ? `${props.seoTitle} ${edge.node.separator} ${edge.node.archiveName} ${edge.node.separator} ${edge.node.title}`
-                  : props.seoTitle && isPaginatedArchive
-                  ? `${edge.node.pageName} ${pageNumber} ${edge.node.separator} ${props.seoTitle} ${edge.node.separator} ${edge.node.title}`
-                  : edge.node.title
+                (seoTitle && homeDef) ||
+                (seoTitle && homeSec) ||
+                (seoTitle && isPage) ||
+                (seoTitle && isArchiveRoot)
+                  ? `${seoTitle} ${node.separator} ${node.title}`
+                  : seoTitle && isPost
+                  ? `${seoTitle} ${node.separator} ${node.archiveName} ${node.separator} ${node.title}`
+                  : seoTitle && isPaginatedArchive
+                  ? `${node.pageName} ${pageNumber} ${node.separator} ${seoTitle} ${node.separator} ${node.title}`
+                  : node.title
               }
             />,
             <meta
               property="og:description"
-              content={props.seoDescription || edge.node.fallbackDescription}
+              content={seoDescription || node.fallbackDescription}
             />,
             <meta
               property="og:image"
-              content={props.seoImage || edge.node.defaultOgImage.url}
+              content={seoImage || node.defaultOgImage.url}
             />,
             <meta
               property="twitter:title"
               content={
-                (props.seoTitle && homeDef) ||
-                (props.seoTitle && homeSec) ||
-                (props.seoTitle && isPage) ||
-                (props.seoTitle && isArchiveRoot)
-                  ? `${props.seoTitle} ${edge.node.separator} ${edge.node.title}`
-                  : props.seoTitle && isPost
-                  ? `${props.seoTitle} ${edge.node.separator} ${edge.node.archiveName} ${edge.node.separator} ${edge.node.title}`
-                  : props.seoTitle && isPaginatedArchive
-                  ? `${edge.node.pageName} ${pageNumber} ${edge.node.separator} ${props.seoTitle} ${edge.node.separator} ${edge.node.title}`
-                  : edge.node.title
+                (seoTitle && homeDef) ||
+                (seoTitle && homeSec) ||
+                (seoTitle && isPage) ||
+                (seoTitle && isArchiveRoot)
+                  ? `${seoTitle} ${node.separator} ${node.title}`
+                  : seoTitle && isPost
+                  ? `${seoTitle} ${node.separator} ${node.archiveName} ${node.separator} ${node.title}`
+                  : seoTitle && isPaginatedArchive
+                  ? `${node.pageName} ${pageNumber} ${node.separator} ${seoTitle} ${node.separator} ${node.title}`
+                  : node.title
               }
             />,
             <meta
               property="twitter:description"
-              content={props.seoDescription || edge.node.fallbackDescription}
+              content={seoDescription || node.fallbackDescription}
             />,
             <meta
               property="twitter:image"
-              content={props.seoImage || edge.node.defaultOgImage.url}
+              content={seoImage || node.defaultOgImage.url}
             />,
           ])}
       </Helmet>
 
-      {props.noHeader || <Header />}
-      <Main hasSubsequent={props.hasSubsequent}>{props.children}</Main>
-      {props.noFooter || <Footer />}
+      {noHeader || <Header />}
+      <Main hasSubsequent={hasSubsequent}>{children}</Main>
+      {noFooter || <Footer />}
     </>
   );
 };

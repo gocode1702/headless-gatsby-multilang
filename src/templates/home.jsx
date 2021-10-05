@@ -22,18 +22,15 @@ import { Paragraph } from "../components/layout/paragraphStyles";
 import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
 
 const HomePageTemplate = ({ data }) => {
-  const homeData = data.datoCmsHomepage;
+  const { seo, hero, features } = data.datoCmsHomepage;
 
   return (
-    <PageWrapper
-      seoTitle={homeData.seo.title}
-      seoDescription={homeData.seo.description}
-    >
+    <PageWrapper seoTitle={seo.title} seoDescription={seo.description}>
       <Hero
         hasDivider
-        alt={homeData.hero[0].heroAlt}
-        title={homeData.hero[0].heroTitle}
-        subtitle={homeData.hero[0].heroSubtitle}
+        alt={hero[0].heroAlt}
+        title={hero[0].heroTitle}
+        subtitle={hero[0].heroSubtitle}
         button={
           <Navigator
             className="classicButton classicButtonOutline"
@@ -44,8 +41,8 @@ const HomePageTemplate = ({ data }) => {
         }
         sectionChildren={
           <SectionContainerGridThreeCols>
-            {homeData.features.map((feature) => (
-              <TextBox small key={feature.originalId}>
+            {features.map((feature) => (
+              <TextBox small key={feature.id}>
                 <HeadingSmall hasTip>{feature.title}</HeadingSmall>
                 <Paragraph>{feature.description}</Paragraph>
               </TextBox>
@@ -63,27 +60,38 @@ const HomePageTemplate = ({ data }) => {
           />
         </SectionTitleContainer>
         <SectionContainerGridThreeCols>
-          {data.allDatoCmsBlogPost.edges.map((edge) => (
-            <ArticleCard
-              key={edge.node.originalId}
-              date={edge.node.meta.publishedAt}
-              time={`${edge.node.minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
-              cardImg={
-                edge.node.cardImage &&
-                CardImgArtDir(
-                  edge.node.cardImage.gatsbyImageData,
-                  edge.node.cardImage.squaredImage,
-                  edge.node.cardImage.alt
-                )
-              }
-              title={edge.node.title}
-              excerpt={edge.node.subtitle}
-              authorImg={edge.node.author.picture.gatsbyImageData}
-              authorAltImg={edge.node.author.picture.alt}
-              authorName={edge.node.author.name}
-              slug={edge.node.slug}
-            />
-          ))}
+          {data.allDatoCmsBlogPost.nodes.map(
+            ({
+              id,
+              meta,
+              minutesOfReading,
+              cardImage,
+              title,
+              subtitle,
+              author,
+              slug,
+            }) => (
+              <ArticleCard
+                key={id}
+                date={meta.publishedAt}
+                time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
+                cardImg={
+                  cardImage &&
+                  CardImgArtDir(
+                    cardImage.gatsbyImageData,
+                    cardImage.squaredImage,
+                    cardImage.alt
+                  )
+                }
+                title={title}
+                excerpt={subtitle}
+                authorImg={author.picture.gatsbyImageData}
+                authorAltImg={author.picture.alt}
+                authorName={author.name}
+                slug={slug}
+              />
+            )
+          )}
         </SectionContainerGridThreeCols>
       </SectionWrapper>
     </PageWrapper>
@@ -111,7 +119,7 @@ export const query = graphql`
         heroSubtitle
       }
       features {
-        originalId
+        id: originalId
         title
         description
       }
@@ -127,39 +135,37 @@ export const query = graphql`
       filter: { locale: { eq: $locale }, featuredInHomepage: { eq: true } }
       limit: 6
     ) {
-      edges {
-        node {
-          originalId
-          meta {
-            publishedAt(locale: $locale, formatString: "DD MMM YYYY")
-          }
-          minutesOfReading
-          cardImage {
-            gatsbyImageData(
-              width: 280
-              height: 100
-              placeholder: NONE
-              forceBlurhash: false
-            )
-            squaredImage: gatsbyImageData(
-              width: 100
-              height: 100
-              imgixParams: { ar: "1", fit: "crop" }
-            )
+      nodes {
+        id: originalId
+        meta {
+          publishedAt(locale: $locale, formatString: "DD MMM YYYY")
+        }
+        minutesOfReading
+        cardImage {
+          gatsbyImageData(
+            width: 280
+            height: 100
+            placeholder: NONE
+            forceBlurhash: false
+          )
+          squaredImage: gatsbyImageData(
+            width: 100
+            height: 100
+            imgixParams: { ar: "1", fit: "crop" }
+          )
+          alt
+        }
+        author {
+          name
+          picture {
+            gatsbyImageData(height: 30, width: 30)
             alt
           }
-          author {
-            name
-            picture {
-              gatsbyImageData(height: 30, width: 30)
-              alt
-            }
-          }
-          subtitle
-          title
-          slug
-          reference
         }
+        subtitle
+        title
+        slug
+        reference
       }
     }
     datoCmsWebsiteSetting(locale: { eq: $locale }) {

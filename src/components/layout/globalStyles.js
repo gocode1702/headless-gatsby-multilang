@@ -2,21 +2,33 @@ import { createGlobalStyle } from "styled-components";
 
 import Settings from "../../static/settings.json";
 
+const {
+  primaryColor,
+  primaryDark,
+  primaryLight,
+  headingsColor,
+  baseTextColor,
+  baseTextColorDark,
+  disabledColor,
+  dividerColor,
+  markColor,
+} = Settings;
+
 const GlobalStyles = createGlobalStyle`
 
         :root {
             
             // Colors
 
-            --primaryColor: ${Settings.primaryColor.hex};
-            --primaryDark: ${Settings.primaryDark.hex};
-            --primaryLight: ${Settings.primaryLight.hex};
-            --headingsColor: ${Settings.headingsColor.hex};
-            --baseTextColor: ${Settings.baseTextColor.hex};
-            --baseTextColorDark: ${Settings.baseTextColorDark.hex};
-            --disabledColor: ${Settings.disabledColor.hex};
-            --dividerColor: ${Settings.dividerColor.hex};
-            --markColor: ${Settings.markColor.hex};
+            --primaryColor: ${primaryColor.hex};
+            --primaryDark: ${primaryDark.hex};
+            --primaryLight: ${primaryLight.hex};
+            --headingsColor: ${headingsColor.hex};
+            --baseTextColor: ${baseTextColor.hex};
+            --baseTextColorDark: ${baseTextColorDark.hex};
+            --disabledColor: ${disabledColor.hex};
+            --dividerColor: ${dividerColor.hex};
+            --markColor: ${markColor.hex};
             
             // Containers
 

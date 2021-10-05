@@ -171,25 +171,32 @@ const AuthorImg = styled(GatsbyImage)`
 
 // Main Component
 
-const ArticleCard = (props) => (
+const ArticleCard = ({
+  slug,
+  cardImg,
+  date,
+  time,
+  title,
+  excerpt,
+  authorImg,
+  authorAltImg,
+  authorName,
+}) => (
   <article>
-    <CardLink article to={props.slug}>
-      {props.cardImg}
+    <CardLink article to={slug}>
+      {cardImg}
       <ContentWrapper>
         <DateTimeContainer>
-          <Date>{props.date}</Date>
+          <Date>{date}</Date>
           <Dot />
-          <Time as="span">{props.time}</Time>
+          <Time as="span">{time}</Time>
         </DateTimeContainer>
-        <PostTitle>{props.title}</PostTitle>
-        <Excerpt>{props.excerpt}</Excerpt>
+        <PostTitle>{title}</PostTitle>
+        <Excerpt>{excerpt}</Excerpt>
         <AuthorCtaContainer>
           <AuthorContainer>
-            <AuthorImg
-              image={props.authorImg || ""}
-              alt={props.authorAltImg || ""}
-            />
-            <Date as="address">{props.authorName}</Date>
+            <AuthorImg image={authorImg || ""} alt={authorAltImg || ""} />
+            <Date as="address">{authorName}</Date>
           </AuthorContainer>
         </AuthorCtaContainer>
       </ContentWrapper>

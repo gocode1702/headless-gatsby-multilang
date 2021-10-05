@@ -59,23 +59,19 @@ const LanguageSwitcher = () => {
   const data = useStaticQuery(graphql`
     query {
       allDatoCmsSite {
-        edges {
-          node {
-            locale
-          }
+        nodes {
+          locale
         }
       }
       allSitePage(
         filter: { context: { slug: { ne: null }, reference: { ne: null } } }
         sort: { fields: context___locale }
       ) {
-        edges {
-          node {
-            context {
-              locale
-              slug
-              reference
-            }
+        nodes {
+          context {
+            locale
+            slug
+            reference
           }
         }
       }
@@ -101,76 +97,73 @@ const LanguageSwitcher = () => {
     <LangNav>
       {!isPost && !isPage ? (
         <LangNavList>
-          {data.allDatoCmsSite.edges.map((edge) => (
-            <li key={edge.node.locale}>
+          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+            <li key={locale}>
               <LanguageSwitcherLink
-                className={
-                  edge.node.locale === currentLanguage && "activeClassLangNav"
-                }
-                as={edge.node.locale === currentLanguage && "span"}
+                className={locale === currentLanguage && "activeClassLangNav"}
+                as={locale === currentLanguage && "span"}
                 to={
-                  edge.node.locale === currentLanguage // Remove attribute if rendering the switcher for the current language
+                  locale === currentLanguage // Remove attribute if rendering the switcher for the current language
                     ? "/"
                     : // Am I rendering the switcher for the default language in a non-default language homepage?
-                    edge.node.locale === defaultLanguage && homeSec
+                    locale === defaultLanguage && homeSec
                     ? "/"
                     : // Am I rendering the switcher for a non-default language in a default language homepage?
-                    edge.node.locale !== defaultLanguage &&
+                    locale !== defaultLanguage &&
                       homeDef &&
                       currentLanguage === defaultLanguage
-                    ? `/${edge.node.locale}`
+                    ? `/${locale}`
                     : // Am I rendering the switcher for a non-default language in a non-default language homepage?
-                    edge.node.locale !== defaultLanguage && homeSec
-                    ? `/${edge.node.locale}`
+                    locale !== defaultLanguage && homeSec
+                    ? `/${locale}`
                     : // Am I rendering a paginated archive page in default language?
-                    edge.node.locale === defaultLanguage && isPaginatedArchive
+                    locale === defaultLanguage && isPaginatedArchive
                     ? `/${defaultBlogPath}/${pageNumber}`
                     : // Am I rendering a paginated archive page in a non-default language?
-                    edge.node.locale !== defaultLanguage && isPaginatedArchive
-                    ? `/${edge.node.locale}/${defaultBlogPath}/${pageNumber}`
+                    locale !== defaultLanguage && isPaginatedArchive
+                    ? `/${locale}/${defaultBlogPath}/${pageNumber}`
                     : // Am I rendering the root archive page in default language?
-                    edge.node.locale === defaultLanguage && isArchiveRoot
+                    locale === defaultLanguage && isArchiveRoot
                     ? `/${defaultBlogPath}`
                     : // Am I rendering the root archive page in non-default language?
-                    edge.node.locale !== defaultLanguage && isArchiveRoot
-                    ? `/${edge.node.locale}/${defaultBlogPath}`
+                    locale !== defaultLanguage && isArchiveRoot
+                    ? `/${locale}/${defaultBlogPath}`
                     : "/"
                 }
               >
-                {edge.node.locale} {/* => Render the language */}
+                {locale} {/* => Render the language */}
               </LanguageSwitcherLink>
             </li>
           ))}
         </LangNavList>
       ) : !isPage && isPost ? (
         <LangNavList>
-          {data.allDatoCmsSite.edges.map((edge) =>
-            edge.node.locale === currentLanguage ? (
-              <li key={edge.node.locale}>
+          {data.allDatoCmsSite.nodes.map(({ locale }) =>
+            locale === currentLanguage ? (
+              <li key={locale}>
                 <LanguageSwitcherLink as="span" className="activeClassLangNav">
-                  {edge.node.locale}
+                  {locale}
                 </LanguageSwitcherLink>
               </li>
             ) : (
-              data.allSitePage.edges.map(
-                (page) =>
-                  page.node.context.slug === postName && // Is there a page with the same slug as the page I'm rendering
-                  page.node.context.locale === currentLanguage && // which has the same locale of the page I'm rendering? // The above condition will occur only once avoiding duplicated languages rendered inside the switcher when an article has the same slug for different languages
-                  data.allSitePage.edges.map(
+              data.allSitePage.nodes.map(
+                ({ context }) =>
+                  context.slug === postName && // Is there a page with the same slug as the page I'm rendering
+                  context.locale === currentLanguage && // which has the same locale of the page I'm rendering? // The above condition will occur only once avoiding duplicated languages rendered inside the switcher when an article has the same slug for different languages
+                  data.allSitePage.nodes.map(
                     // Ok, iterate again through all the pages...
-                    (locPage) =>
-                      locPage.node.context.locale === edge.node.locale && // Is there a page of the same locale switcher I am rendering
-                      locPage.node.context.reference ===
-                        page.node.context.reference && ( // which has the same reference of the page I found before?
-                        <li key={edge.node.locale}>
+                    (matchNode) =>
+                      matchNode.context.locale === locale && // Is there a page of the same locale switcher I am rendering
+                      matchNode.context.reference === context.reference && ( // which has the same reference of the page I found before?
+                        <li key={locale}>
                           <LanguageSwitcherLink
                             to={
-                              edge.node.locale === defaultLanguage
-                                ? `/${defaultBlogPath}/${locPage.node.context.slug}`
-                                : `/${edge.node.locale}/${defaultBlogPath}/${locPage.node.context.slug}` // => Render the correspondent slug
+                              locale === defaultLanguage
+                                ? `/${defaultBlogPath}/${matchNode.context.slug}`
+                                : `/${locale}/${defaultBlogPath}/${matchNode.context.slug}` // => Render the correspondent slug
                             }
                           >
-                            {edge.node.locale} {/* => Render the locale */}
+                            {locale} {/* => Render the locale */}
                           </LanguageSwitcherLink>
                         </li>
                       )
@@ -183,36 +176,35 @@ const LanguageSwitcher = () => {
         isPage &&
         !isPost && (
           <LangNavList>
-            {data.allDatoCmsSite.edges.map((edge) =>
-              edge.node.locale === currentLanguage ? (
-                <li key={edge.node.locale}>
+            {data.allDatoCmsSite.nodes.map(({ locale }) =>
+              locale === currentLanguage ? (
+                <li key={locale}>
                   <LanguageSwitcherLink
                     as="span"
                     className="activeClassLangNav"
                   >
-                    {edge.node.locale}
+                    {locale}
                   </LanguageSwitcherLink>
                 </li>
               ) : (
                 // Follows the same logic adopted above
-                data.allSitePage.edges.map(
-                  (page) =>
-                    page.node.context.slug === pageName &&
-                    page.node.context.locale === currentLanguage &&
-                    data.allSitePage.edges.map(
-                      (locPage) =>
-                        locPage.node.context.locale === edge.node.locale &&
-                        page.node.context.reference ===
-                          locPage.node.context.reference && (
-                          <li key={edge.node.locale}>
+                data.allSitePage.nodes.map(
+                  ({ context }) =>
+                    context.slug === pageName &&
+                    context.locale === currentLanguage &&
+                    data.allSitePage.nodes.map(
+                      (matchNode) =>
+                        matchNode.context.locale === locale &&
+                        context.reference === matchNode.context.reference && (
+                          <li key={locale}>
                             <LanguageSwitcherLink
                               to={
-                                edge.node.locale === defaultLanguage
-                                  ? `/${locPage.node.context.slug}`
-                                  : `/${edge.node.locale}/${locPage.node.context.slug}`
+                                locale === defaultLanguage
+                                  ? `/${matchNode.context.slug}`
+                                  : `/${locale}/${matchNode.context.slug}`
                               }
                             >
-                              {edge.node.locale}
+                              {locale}
                             </LanguageSwitcherLink>
                           </li>
                         )

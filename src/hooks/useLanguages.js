@@ -19,7 +19,6 @@ const useLanguages = () => {
   );
   return {
     defaultLanguage: data.allDatoCmsSite.edges[0].node.locale,
-    availableLanguages: data.allDatoCmsSite.edges.length,
     defaultBlogPath: data.datoCmsWebsiteSetting.blogPath,
   };
 };

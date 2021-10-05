@@ -168,7 +168,16 @@ const Icon = styled.a`
 
 // Main Component
 
-const ArticleHeader = (props) => {
+const ArticleHeader = ({
+  authorName,
+  date,
+  title,
+  subtitle,
+  authorImg,
+  coverImg,
+  authorImgAlt,
+  coverImgAlt,
+}) => {
   const { siteUrl } = useSiteUrl();
 
   const { pathname } = useContext(LangContext);
@@ -180,17 +189,17 @@ const ArticleHeader = (props) => {
           <BackButtonIcon />
         </BackButtonWrapper>
         <AuthorDateContainer>
-          <Author>{props.authorName}</Author>
+          <Author>{authorName}</Author>
           <Dot />
-          <Author as="time">{props.date}</Author>
+          <Author as="time">{date}</Author>
         </AuthorDateContainer>
-        <ArticleTitle>{props.title}</ArticleTitle>
-        <ArticleSubtitle>{props.subtitle}</ArticleSubtitle>
+        <ArticleTitle>{title}</ArticleTitle>
+        <ArticleSubtitle>{subtitle}</ArticleSubtitle>
       </Header>
       <ImgFullWrapper>
         <ImgWrapper>
-          <AuthorImg image={props.authorImg} alt={props.authorImgAlt} />
-          <ArticleCover image={props.coverImg} alt={props.coverImgAlt} />
+          <AuthorImg image={authorImg} alt={authorImgAlt} />
+          <ArticleCover image={coverImg} alt={coverImgAlt} />
         </ImgWrapper>
         <SharingIcons>
           <Icon

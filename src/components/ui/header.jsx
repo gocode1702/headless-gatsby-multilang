@@ -95,7 +95,7 @@ const Header = () => {
           node {
             locale
             links {
-              originalId
+              id: originalId
               ariaLabel
               name
               slug
@@ -130,7 +130,7 @@ const Header = () => {
               .filter((edge) => edge.node.locale === currentLanguage)
               .map((edge) =>
                 edge.node.links.map((link) => (
-                  <li key={link.originalId}>
+                  <li key={link.id}>
                     <Link
                       activeClassName="activeClassLink"
                       to={

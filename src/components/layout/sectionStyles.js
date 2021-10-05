@@ -4,8 +4,8 @@ import styled from "styled-components";
 
 export const Main = styled.main`
   & > section:last-of-type {
-    padding: ${(props) =>
-      props.hasSubsequent &&
+    padding: ${({ hasSubsequent }) =>
+      hasSubsequent &&
       "var(--globalPaddingLr) var(--globalPaddingLr) var(--globalPaddingTb) var(--globalPaddingLr)"};
   }
 `;
@@ -20,18 +20,18 @@ export const SectionWrapper = styled.section`
   flex-direction: column;
   position: relative;
 
-  ${(props) => {
-    if (props.isBlog) {
+  ${({ isBlog, noTopPaddings, hasSubsequent }) => {
+    if (isBlog) {
       return `
           padding: var(--globalPaddingLr) var(--globalPaddingLr) var(--globalPaddingTb);
         `;
     }
-    if (props.noTopPaddings) {
+    if (noTopPaddings) {
       return `
           padding: 0 var(--globalPaddingLr);
         `;
     }
-    if (props.hasSubsequent) {
+    if (hasSubsequent) {
       return `
           padding: var(--globalPaddingLr);
         `;
@@ -42,7 +42,7 @@ export const SectionWrapper = styled.section`
   }}
 
   @media screen and (max-width: 860px) {
-    align-items: ${(props) => (props.isArticle ? "flex-start" : "center")};
+    align-items: ${({ isArticle }) => (isArticle ? "flex-start" : "center")};
   }
 `;
 
@@ -117,7 +117,7 @@ export const SectionTitleContainer = styled.header`
   display: flex;
   align-items: center;
   margin-bottom: var(--gapXL);
-  justify-content: ${(props) => (props.hasButton ? "space-between" : "")};
+  justify-content: ${({ hasButton }) => (hasButton ? "space-between" : "")};
 
   @media screen and (max-width: 1170px) {
     width: 100%;
@@ -145,22 +145,21 @@ export const ColumnFlexTwoCols = styled.div`
     justify-content: flex-start;
 
     & img {
-      width: ${(props) => props.hasImg && "150px"};
+      width: ${({ hasImg }) => hasImg && "150px"};
     }
   }
 `;
 
 export const TextBox = styled.section`
   display: grid;
-  row-gap: ${(props) =>
-    props.small ? "var(--gapSmall)" : "var(--gapRegular)"};
+  row-gap: ${({ small }) => (small ? "var(--gapSmall)" : "var(--gapRegular)")};
   align-content: baseline;
 `;
 
 export const Divider = styled.hr`
   width: var(--globalContainer);
-  bottom: ${(props) => props.bottom && "0"};
-  top: ${(props) => props.top && "0"};
+  bottom: ${({ bottom }) => bottom && "0"};
+  top: ${({ top }) => top && "0"};
   position: absolute;
   height: 1px;
   margin: 0;

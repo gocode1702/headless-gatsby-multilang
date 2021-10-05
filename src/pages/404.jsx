@@ -14,17 +14,15 @@ const NotFoundPage = () => {
   const data = useStaticQuery(graphql`
     query NotFoundPageQuery {
       allDatoCmsNotFoundPage {
-        edges {
-          node {
-            seo {
-              title
-              description
-            }
+        nodes {
+          seo {
             title
-            subtitle
-            backToHomeText
-            locale
+            description
           }
+          title
+          subtitle
+          backToHomeText
+          locale
         }
       }
     }
@@ -32,11 +30,12 @@ const NotFoundPage = () => {
 
   const { currentLanguage } = useContext(LangContext);
 
-  const currentLanguageData = data.allDatoCmsNotFoundPage.edges.filter(
-    (edge) => edge.node.locale === currentLanguage
+  const currentLanguageData = data.allDatoCmsNotFoundPage.nodes.filter(
+    (node) => node.locale === currentLanguage
   );
 
-  const defaultLanguageData = data.allDatoCmsNotFoundPage.edges[0].node;
+  const { seo, title, subtitle, backToHomeText } =
+    data.allDatoCmsNotFoundPage.nodes[0];
 
   // In order to avoid localized content update flickerings when 404 GET errors occur, let's delay the rendering of the page by 200ms until URL evaluation is completed
 
@@ -53,15 +52,15 @@ const NotFoundPage = () => {
     if (currentLanguageData[0] === undefined)
       return {
         pageWrapper: {
-          seoTitle: defaultLanguageData.seo.title,
-          seoDescription: defaultLanguageData.seo.description,
+          seoTitle: seo.title,
+          seoDescription: seo.description,
         },
         hero: {
-          title: defaultLanguageData.title,
-          subtitle: defaultLanguageData.subtitle,
+          title: title,
+          subtitle: subtitle,
         },
         navigator: {
-          text: defaultLanguageData.backToHomeText,
+          text: backToHomeText,
           to: "/",
         },
       };
@@ -69,15 +68,15 @@ const NotFoundPage = () => {
     // Else display corresponding filtered data
     return {
       pageWrapper: {
-        seoTitle: currentLanguageData[0].node.seo.title,
-        seoDescription: currentLanguageData[0].node.seo.description,
+        seoTitle: currentLanguageData[0].seo.title,
+        seoDescription: currentLanguageData[0].seo.description,
       },
       hero: {
-        title: currentLanguageData[0].node.title,
-        subtitle: currentLanguageData[0].node.subtitle,
+        title: currentLanguageData[0].title,
+        subtitle: currentLanguageData[0].subtitle,
       },
       navigator: {
-        text: currentLanguageData[0].node.backToHomeText,
+        text: currentLanguageData[0].backToHomeText,
         home: true,
       },
     };

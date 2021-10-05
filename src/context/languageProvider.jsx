@@ -13,7 +13,7 @@ export const LangContext = createContext({});
 
 const isNumber = (value) => !Number.isNaN(Number(value));
 
-const LanguageProvider = (props) => {
+const LanguageProvider = ({ children }) => {
   // Hooks import
 
   const { defaultLanguage, defaultBlogPath } = useLanguages();
@@ -195,9 +195,7 @@ const LanguageProvider = (props) => {
 
   // console.log(store);
 
-  return (
-    <LangContext.Provider value={store}>{props.children}</LangContext.Provider>
-  );
+  return <LangContext.Provider value={store}>{children}</LangContext.Provider>;
 };
 
 export default LanguageProvider;

@@ -54,10 +54,10 @@ const Nav = styled.nav`
   }
 `;
 
-const PrevNextNav = (props) => (
+const PrevNextNav = ({ previousNavRender, nextNavRender }) => (
   <Nav>
-    {props.previousNavRender}
-    {props.nextNavRender}
+    {previousNavRender}
+    {nextNavRender}
   </Nav>
 );
 

@@ -11,7 +11,7 @@ const HeroWrapper = styled.section`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: ${(props) => props.fullView && "100vh"};
+  height: ${({ fullView }) => fullView && "100vh"};
   padding: var(--globalPaddingTb) var(--globalPaddingLr);
   flex-direction: column;
   position: relative;
@@ -21,7 +21,7 @@ const HeroContainer = styled.div`
   width: var(--globalContainer);
   display: grid;
   row-gap: var(--gapXL);
-  justify-content: ${(props) => props.centered && "center"};
+  justify-content: ${({ centered }) => centered && "center"};
 
   @media screen and (max-width: 1170px) {
     width: 100%;
@@ -33,25 +33,34 @@ const HeroTextBox = styled.div`
   grid-template-columns: 1fr;
   row-gap: var(--gapRegular);
   width: 600px;
-  justify-items: ${(props) => props.centered && "center"};
+  justify-items: ${({ centered }) => centered && "center"};
 
   @media screen and (max-width: 767px) {
     width: 100%;
   }
 `;
 
-const Hero = (props) => (
-  <HeroWrapper fullView={props.fullView}>
-    <HeroContainer centered={props.centered}>
-      <HeroTextBox centered={props.centered}>
-        {props.alt && <HeroAlt>{props.alt}</HeroAlt>}
-        <HeroTitle centered={props.centered}>{props.title}</HeroTitle>
-        <HeroSubtitle centered={props.centered}>{props.subtitle}</HeroSubtitle>
-        {props.button}
+const Hero = ({
+  fullView,
+  centered,
+  alt,
+  title,
+  subtitle,
+  button,
+  sectionChildren,
+  hasDivider,
+}) => (
+  <HeroWrapper fullView={fullView}>
+    <HeroContainer centered={centered}>
+      <HeroTextBox centered={centered}>
+        {alt && <HeroAlt>{alt}</HeroAlt>}
+        <HeroTitle centered={centered}>{title}</HeroTitle>
+        <HeroSubtitle centered={centered}>{subtitle}</HeroSubtitle>
+        {button}
       </HeroTextBox>
-      {props.sectionChildren}
+      {sectionChildren}
     </HeroContainer>
-    {props.hasDivider && <Divider bottom />}
+    {hasDivider && <Divider bottom />}
   </HeroWrapper>
 );
 

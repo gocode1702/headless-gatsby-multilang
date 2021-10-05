@@ -27,31 +27,32 @@ import { SectionWrapper } from "../components/layout/sectionStyles";
 
 import Navigator from "../components/langHelpers/navigator";
 
-const BlogPostTemplate = ({ data, pageContext }) => {
-  const blogPost = data.datoCmsBlogPost;
+const BlogPostTemplate = ({ data, pageContext: { skipNext } }) => {
+  const { id, structuredBody, seo, title, subtitle, author, coverImage, meta } =
+    data.datoCmsBlogPost;
 
   return (
     <PageWrapper
-      seoTitle={blogPost.seo.title}
-      seoDescription={blogPost.seo.description}
-      seoImage={blogPost.seo.image.url}
+      seoTitle={seo.title}
+      seoDescription={seo.description}
+      seoImage={seo.image.url}
     >
       <SectionWrapper as="article" isBlog article>
         <ArticleHeader
-          title={blogPost.title}
-          subtitle={blogPost.subtitle}
-          authorName={blogPost.author.name}
-          coverImg={blogPost.coverImage.gatsbyImageData}
-          coverImgAlt={blogPost.coverImage.alt}
-          authorImg={blogPost.author.picture.gatsbyImageData}
-          authorImgAlt={blogPost.author.picture.alt}
-          date={blogPost.meta.firstPublishedAt}
+          title={title}
+          subtitle={subtitle}
+          authorName={author.name}
+          coverImg={coverImage.gatsbyImageData}
+          coverImgAlt={coverImage.alt}
+          authorImg={author.picture.gatsbyImageData}
+          authorImgAlt={author.picture.alt}
+          date={meta.firstPublishedAt}
         />
         <ArticleBody>
-          {!blogPost.structuredBody.value || (
+          {!structuredBody.value || (
             <StructuredText
-              key={blogPost.id}
-              data={blogPost.structuredBody}
+              key={id}
+              data={structuredBody}
               customRules={[
                 renderRule(isCode, ({ node, key }) => (
                   <div style={{ position: "relative" }} key={key}>
@@ -116,14 +117,14 @@ const BlogPostTemplate = ({ data, pageContext }) => {
           previousNavRender={
             <>
               <div>
-                {pageContext.skipNext >= 0 && pageContext.skipNext !== 1 && (
+                {skipNext >= 0 && skipNext !== 1 && (
                   <>
                     <span>{data.datoCmsWebsiteSetting.previous}</span>
                     <h2>
                       <Navigator
                         article
-                        text={data.previous.edges[0].node.title}
-                        to={data.previous.edges[0].node.slug}
+                        text={data.previous.nodes[0].title}
+                        to={data.previous.nodes[0].slug}
                       />
                     </h2>
                   </>
@@ -134,14 +135,14 @@ const BlogPostTemplate = ({ data, pageContext }) => {
           nextNavRender={
             <>
               <div>
-                {pageContext.skipNext > 0 && (
+                {skipNext > 0 && (
                   <>
                     <span>{data.datoCmsWebsiteSetting.next}</span>
                     <h2>
                       <Navigator
                         article
-                        text={data.next.edges[0].node.title}
-                        to={data.next.edges[0].node.slug}
+                        text={data.next.nodes[0].title}
+                        to={data.next.nodes[0].slug}
                       />
                     </h2>
                   </>
@@ -172,11 +173,9 @@ export const query = graphql`
       limit: 1
       skip: $skipNext
     ) {
-      edges {
-        node {
-          slug
-          title
-        }
+      nodes {
+        slug
+        title
       }
     }
     previous: allDatoCmsBlogPost(
@@ -185,11 +184,9 @@ export const query = graphql`
       skip: $skipPrevious
       limit: 1
     ) {
-      edges {
-        node {
-          slug
-          title
-        }
+      nodes {
+        slug
+        title
       }
     }
     datoCmsWebsiteSetting(locale: { eq: $locale }) {

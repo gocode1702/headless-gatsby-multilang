@@ -74,16 +74,14 @@ const MobileMenu = () => {
   const data = useStaticQuery(graphql`
     query MobileMenuQuery {
       allDatoCmsMenu {
-        edges {
-          node {
+        nodes {
+          locale
+          links {
+            id: originalId
+            ariaLabel
+            name
+            slug
             locale
-            links {
-              originalId
-              ariaLabel
-              name
-              slug
-              locale
-            }
           }
         }
       }
@@ -100,16 +98,16 @@ const MobileMenu = () => {
       <Hamburger isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       <MobileMenuNav isOpen={isOpen} aria-hidden={!isOpen || false}>
         <MobileMenuNavList>
-          {data.allDatoCmsMenu.edges
-            .filter((edge) => edge.node.locale === currentLanguage)
-            .map((edge) =>
-              edge.node.links.map((link, index) => (
-                <Fragment key={link.originalId}>
+          {data.allDatoCmsMenu.nodes
+            .filter((node) => node.locale === currentLanguage)
+            .map((node) =>
+              node.links.map((link, index) => (
+                <Fragment key={link.id}>
                   <li>
                     <Link
                       activeClassName="activeClassLink"
                       to={
-                        edge.node.locale === defaultLanguage
+                        node.locale === defaultLanguage
                           ? `/${link.slug}`
                           : `/${link.locale}/${link.slug}`
                       }
@@ -117,7 +115,7 @@ const MobileMenu = () => {
                     >
                       {link.name}
                     </Link>
-                    {edge.node.links.length - 1 !== index && (
+                    {node.links.length - 1 !== index && (
                       <MobileNavDivider key={`div_${link.slug}`} />
                     )}
                   </li>

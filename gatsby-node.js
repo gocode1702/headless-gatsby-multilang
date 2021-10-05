@@ -196,10 +196,8 @@ exports.createPages = async ({ graphql, actions }) => {
   const homePageGeneration = await graphql(`
     query {
       allDatoCmsHomepage {
-        edges {
-          node {
-            locale
-          }
+        nodes {
+          locale
         }
       }
     }
@@ -207,12 +205,12 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const HomePageTemplate = path.resolve("src/templates/home.jsx");
 
-  homePageGeneration.data.allDatoCmsHomepage.edges.forEach((edge) => {
+  homePageGeneration.data.allDatoCmsHomepage.nodes.forEach(({ locale }) => {
     createPage({
-      path: `${edge.node.locale === defaultLanguage ? "/" : edge.node.locale}`,
+      path: `${locale === defaultLanguage ? "/" : locale}`,
       component: HomePageTemplate,
       context: {
-        locale: edge.node.locale,
+        locale,
       },
     });
   });
@@ -222,13 +220,11 @@ exports.createPages = async ({ graphql, actions }) => {
   const otherPagesGeneration = await graphql(`
     query {
       allDatoCmsOtherPage {
-        edges {
-          node {
-            originalId
-            locale
-            slug
-            reference
-          }
+        nodes {
+          id: originalId
+          locale
+          slug
+          reference
         }
       }
     }
@@ -236,52 +232,57 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const OtherPageTemplate = path.resolve("src/templates/otherPage.jsx");
 
-  otherPagesGeneration.data.allDatoCmsOtherPage.edges.forEach((edge) => {
-    createPage({
-      path: `${
-        edge.node.locale === defaultLanguage
-          ? `/${edge.node.slug}`
-          : `${edge.node.locale}/${edge.node.slug}`
-      }`,
-      component: OtherPageTemplate,
-      context: {
-        id: edge.node.originalId,
-        locale: edge.node.locale,
-        slug: edge.node.slug,
-        reference: edge.node.reference,
-      },
-    });
-  });
+  otherPagesGeneration.data.allDatoCmsOtherPage.nodes.forEach(
+    ({ locale, slug, id, reference }) => {
+      createPage({
+        path: `${
+          locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`
+        }`,
+        component: OtherPageTemplate,
+        context: {
+          id,
+          locale,
+          slug,
+          reference,
+        },
+      });
+    }
+  );
 
   // Webmanifest generation
 
   const webManifestGeneration = await graphql(`
     query {
       allDatoCmsWebsiteSetting {
-        edges {
-          node {
-            name
-            shortName
-            locale
-            pwaIcon {
-              icon: url(imgixParams: { w: "32", h: "32" })
-              normalSize: url(imgixParams: { w: "192", h: "192" })
-              bigSize: url(imgixParams: { w: "512", h: "512" })
-            }
-            backgroundColor {
-              hex
-            }
-            primaryColor {
-              hex
-            }
+        nodes {
+          name
+          shortName
+          locale
+          pwaIcon {
+            icon: url(imgixParams: { w: "32", h: "32" })
+            normalSize: url(imgixParams: { w: "192", h: "192" })
+            bigSize: url(imgixParams: { w: "512", h: "512" })
+          }
+          backgroundColor {
+            hex
+          }
+          primaryColor {
+            hex
           }
         }
       }
     }
   `);
 
-  const defaultLangData =
-    webManifestGeneration.data.allDatoCmsWebsiteSetting.edges[0].node;
+  const {
+    pwaIcon,
+    name,
+    shortName,
+    description,
+    locale,
+    backgroundColor,
+    primaryColor,
+  } = webManifestGeneration.data.allDatoCmsWebsiteSetting.nodes[0];
 
   const publicPath = "public";
   const imagesPath = "public/images";
@@ -296,13 +297,13 @@ exports.createPages = async ({ graphql, actions }) => {
   const icon = fs.createWriteStream(`${publicPath}/favicon-32.png`);
 
   try {
-    https.get(`${defaultLangData.pwaIcon.normalSize}`, (response) => {
+    https.get(`${pwaIcon.normalSize}`, (response) => {
       response.pipe(iconNormal);
     });
-    https.get(`${defaultLangData.pwaIcon.bigSize}`, (response) => {
+    https.get(`${pwaIcon.bigSize}`, (response) => {
       response.pipe(iconBig);
     });
-    https.get(`${defaultLangData.pwaIcon.icon}`, (response) => {
+    https.get(`${pwaIcon.icon}`, (response) => {
       response.pipe(icon);
     });
   } catch (err) {
@@ -310,14 +311,14 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   const manifest = {
-    name: defaultLangData.name,
-    short_name: defaultLangData.shortName,
-    description: defaultLangData.description,
-    lang: defaultLangData.locale,
+    name,
+    short_name: shortName,
+    description,
+    lang: locale,
     display: "standalone",
     start_url: "/",
-    background_color: defaultLangData.backgroundColor.hex,
-    theme_color: defaultLangData.primaryColor.hex,
+    background_color: backgroundColor.hex,
+    theme_color: primaryColor.hex,
     icons: [
       {
         src: "images/icon-192.png",
@@ -345,21 +346,21 @@ exports.createPages = async ({ graphql, actions }) => {
   // Additional language webmanifest files generation
 
   const additionalLanguages =
-    webManifestGeneration.data.allDatoCmsWebsiteSetting.edges.length;
+    webManifestGeneration.data.allDatoCmsWebsiteSetting.nodes.length;
 
   if (additionalLanguages > 1) {
-    webManifestGeneration.data.allDatoCmsWebsiteSetting.edges
-      .filter((edge) => edge.node.locale !== defaultLanguage) // Exclude default language already generated
-      .forEach((language) => {
+    webManifestGeneration.data.allDatoCmsWebsiteSetting.nodes
+      .filter(({ locale }) => locale !== defaultLanguage) // Exclude default language already generated
+      .forEach((node) => {
         const manifest = {
-          name: language.node.name,
-          short_name: language.node.shortName,
-          description: language.node.description,
-          lang: language.node.locale,
+          name: node.name,
+          short_name: node.shortName,
+          description: node.description,
+          lang: node.locale,
           display: "standalone",
-          start_url: `/${language.node.locale}/`,
-          background_color: defaultLangData.backgroundColor.hex,
-          theme_color: defaultLangData.primaryColor.hex,
+          start_url: `/${node.locale}/`,
+          background_color: backgroundColor.hex,
+          theme_color: primaryColor.hex,
           icons: [
             {
               src: "images/icon-192.png",
@@ -377,7 +378,7 @@ exports.createPages = async ({ graphql, actions }) => {
           cacheDigest: null,
         };
         fs.writeFileSync(
-          `${publicPath}/manifest_${language.node.locale}.webmanifest`,
+          `${publicPath}/manifest_${node.locale}.webmanifest`,
           JSON.stringify(manifest, undefined, 2)
         );
       });

@@ -41,27 +41,25 @@ const BlogArchiveTemplate = ({ data, pageContext }) => {
       />
       <SectionWrapper isBlog>
         <SectionContainerGridThreeCols>
-          {data.allDatoCmsBlogPost.edges.map((edge) => (
+          {data.allDatoCmsBlogPost.nodes.map((node) => (
             <ArticleCard
-              key={edge.node.originalId}
-              date={edge.node.meta.publishedAt}
-              time={`${edge.node.minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
+              key={node.id}
+              date={node.meta.publishedAt}
+              time={`${node.minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
               cardImg={
-                edge.node.cardImage &&
+                node.cardImage &&
                 CardImgArtDir(
-                  edge.node.cardImage.gatsbyImageData,
-                  edge.node.cardImage.squaredImage,
-                  edge.node.cardImage.alt
+                  node.cardImage.gatsbyImageData,
+                  node.cardImage.squaredImage,
+                  node.cardImage.alt
                 )
               }
-              title={edge.node.title}
-              excerpt={edge.node.subtitle}
-              authorImg={
-                edge.node.author && edge.node.author.picture.gatsbyImageData
-              }
-              authorAltImg={edge.node.author && edge.node.author.picture.alt}
-              authorName={edge.node.author && edge.node.author.name}
-              slug={edge.node.slug}
+              title={node.title}
+              excerpt={node.subtitle}
+              authorImg={node.author && node.author.picture.gatsbyImageData}
+              authorAltImg={node.author && node.author.picture.alt}
+              authorName={node.author && node.author.name}
+              slug={node.slug}
             />
           ))}
         </SectionContainerGridThreeCols>
@@ -119,41 +117,40 @@ export const query = graphql`
       limit: $limit
       skip: $skip
     ) {
-      edges {
-        node {
-          originalId
-          meta {
-            publishedAt(locale: $locale, formatString: "DD MMM YYYY")
-          }
-          minutesOfReading
-          cardImage {
-            gatsbyImageData(
-              width: 280
-              height: 100
-              placeholder: NONE
-              forceBlurhash: false
-            )
-            squaredImage: gatsbyImageData(
-              width: 100
-              height: 100
-              imgixParams: { ar: "1", fit: "crop" }
-            )
+      nodes {
+        id: originalId
+        meta {
+          publishedAt(locale: $locale, formatString: "DD MMM YYYY")
+        }
+        minutesOfReading
+        cardImage {
+          gatsbyImageData(
+            width: 280
+            height: 100
+            placeholder: NONE
+            forceBlurhash: false
+          )
+          squaredImage: gatsbyImageData(
+            width: 100
+            height: 100
+            imgixParams: { ar: "1", fit: "crop" }
+          )
+          alt
+        }
+        author {
+          name
+          picture {
+            gatsbyImageData(height: 30, width: 30)
             alt
           }
-          author {
-            name
-            picture {
-              gatsbyImageData(height: 30, width: 30)
-              alt
-            }
-          }
-          subtitle
-          title
-          slug
-          reference
         }
+        subtitle
+        title
+        slug
+        reference
       }
     }
+
     datoCmsWebsiteSetting(locale: { eq: $locale }) {
       minsReadSuffix
     }

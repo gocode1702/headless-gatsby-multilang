@@ -52,15 +52,13 @@ const HamburgerButton = styled.button`
 
 // Main Component
 
-const Hamburger = (props) => {
+const Hamburger = ({ isOpen, onClick }) => {
   const data = useStaticQuery(graphql`
     query AriaLabelQuery {
       allDatoCmsMenu {
-        edges {
-          node {
-            ariaLabelHamburger
-            locale
-          }
+        nodes {
+          ariaLabelHamburger
+          locale
         }
       }
     }
@@ -70,14 +68,14 @@ const Hamburger = (props) => {
 
   return (
     <>
-      {data.allDatoCmsMenu.edges
-        .filter((edge) => edge.node.locale === currentLanguage)
-        .map((edge) => (
+      {data.allDatoCmsMenu.nodes
+        .filter((node) => node.locale === currentLanguage)
+        .map((node) => (
           <HamburgerButton
-            key={`hamb_${edge.node.locale}`}
-            aria-label={edge.node.ariaLabelHamburger}
-            isOpen={props.isOpen}
-            onClick={props.onClick}
+            key={`hamb_${node.locale}`}
+            aria-label={node.ariaLabelHamburger}
+            isOpen={isOpen}
+            onClick={onClick}
           >
             <span> </span>
             <span> </span>

@@ -27,26 +27,43 @@ import {
 import { Paragraph } from "../components/layout/paragraphStyles";
 
 const OtherPageTemplate = ({ data }) => {
-  const otherPage = data.datoCmsOtherPage;
+  const { seo, structuredBody } = data.datoCmsOtherPage;
 
   return (
     <PageWrapper
-      seoTitle={otherPage.seo.title}
-      seoDescription={otherPage.seo.description}
-      seoImage={otherPage.seo.image.url}
+      seoTitle={seo.title}
+      seoDescription={seo.description}
+      seoImage={seo.image.url}
       hasSubsequent
     >
-      {otherPage.structuredBody.value && (
+      {structuredBody.value && (
         <StructuredText
-          data={otherPage.structuredBody}
-          renderBlock={({ record }) => {
-            switch (record.typeName) {
+          data={structuredBody}
+          renderBlock={({
+            record: {
+              typeName,
+              heroAlt,
+              heroTitle,
+              heroSubtitle,
+              image,
+              title,
+              text,
+              slug,
+              firstFeatureTitle,
+              firstFeatureDescription,
+              secondFeatureTitle,
+              secondFeatureDescription,
+              thirdFeatureTitle,
+              thirdFeatureDescription,
+            },
+          }) => {
+            switch (typeName) {
               case "hero":
                 return (
                   <Hero
-                    alt={record.heroAlt}
-                    title={record.heroTitle}
-                    subtitle={record.heroSubtitle}
+                    alt={heroAlt}
+                    title={heroTitle}
+                    subtitle={heroSubtitle}
                   />
                 );
               case "section image left":
@@ -54,26 +71,26 @@ const OtherPageTemplate = ({ data }) => {
                   <SectionWrapper hasSubsequent>
                     <SectionContainerFlexTwoCols>
                       <ColumnFlexTwoCols hasImg>
-                        <img src={record.image.url} alt={record.image.alt} />
+                        <img src={image.url} alt={image.alt} />
                       </ColumnFlexTwoCols>
                       <ColumnFlexTwoCols>
                         <TextBox as="div">
-                          <HeadingMedium>{record.title}</HeadingMedium>
+                          <HeadingMedium>{title}</HeadingMedium>
                           <Paragraph as="div">
                             <StructuredText
-                              data={record.text}
+                              data={text}
                               renderLinkToRecord={({
                                 record,
                                 children,
                                 transformedMeta,
                               }) => {
-                                switch (record.typeName) {
+                                switch (typeName) {
                                   case "page":
                                     return (
                                       <Navigator
                                         {...transformedMeta}
                                         page
-                                        to={record.slug}
+                                        to={slug}
                                       >
                                         {children}
                                       </Navigator>
@@ -102,22 +119,22 @@ const OtherPageTemplate = ({ data }) => {
                     <SectionContainerFlexTwoColsReverse>
                       <ColumnFlexTwoCols>
                         <TextBox as="div">
-                          <HeadingMedium>{record.title}</HeadingMedium>
+                          <HeadingMedium>{title}</HeadingMedium>
                           <Paragraph as="div">
                             <StructuredText
-                              data={record.text}
+                              data={text}
                               renderLinkToRecord={({
                                 record,
                                 children,
                                 transformedMeta,
                               }) => {
-                                switch (record.typeName) {
+                                switch (typeName) {
                                   case "page":
                                     return (
                                       <Navigator
                                         {...transformedMeta}
                                         page
-                                        to={record.slug}
+                                        to={slug}
                                       >
                                         {children}
                                       </Navigator>
@@ -138,7 +155,7 @@ const OtherPageTemplate = ({ data }) => {
                         </TextBox>
                       </ColumnFlexTwoCols>
                       <ColumnFlexTwoCols hasImg>
-                        <img src={record.image.url} alt={record.image.alt} />
+                        <img src={image.url} alt={image.alt} />
                       </ColumnFlexTwoCols>
                     </SectionContainerFlexTwoColsReverse>
                   </SectionWrapper>
@@ -148,22 +165,16 @@ const OtherPageTemplate = ({ data }) => {
                   <SectionWrapper hasSubsequent>
                     <SectionContainerGridThreeCols>
                       <TextBox small>
-                        <HeadingSmall hasTip>
-                          {record.firstFeatureTitle}
-                        </HeadingSmall>
-                        <Paragraph>{record.firstFeatureDescription}</Paragraph>
+                        <HeadingSmall hasTip>{firstFeatureTitle}</HeadingSmall>
+                        <Paragraph>{firstFeatureDescription}</Paragraph>
                       </TextBox>
                       <TextBox small>
-                        <HeadingSmall hasTip>
-                          {record.secondFeatureTitle}
-                        </HeadingSmall>
-                        <Paragraph>{record.secondFeatureDescription}</Paragraph>
+                        <HeadingSmall hasTip>{secondFeatureTitle}</HeadingSmall>
+                        <Paragraph>{secondFeatureDescription}</Paragraph>
                       </TextBox>
                       <TextBox small>
-                        <HeadingSmall hasTip>
-                          {record.thirdFeatureTitle}
-                        </HeadingSmall>
-                        <Paragraph>{record.thirdFeatureDescription}</Paragraph>
+                        <HeadingSmall hasTip>{thirdFeatureTitle}</HeadingSmall>
+                        <Paragraph>{thirdFeatureDescription}</Paragraph>
                       </TextBox>
                     </SectionContainerGridThreeCols>
                   </SectionWrapper>

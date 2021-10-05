@@ -383,7 +383,7 @@ A typical dynamic pages generation would look like:
       allDatoCmsOtherPage {
         edges {
           node {
-            originalId
+            id: originalId
             locale
             slug
             reference
@@ -402,7 +402,7 @@ A typical dynamic pages generation would look like:
       }`,
       component: OtherPageTemplate,
       context: {
-        id: edge.node.originalId,
+        id: edge.node.id,
         locale: edge.node.locale,
         slug: edge.node.slug,
         reference: edge.node.reference,
