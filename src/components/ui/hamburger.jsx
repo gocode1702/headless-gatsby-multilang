@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 
 import { graphql, useStaticQuery } from "gatsby";
 
-import { LangContext } from "../../context/languageProvider";
+import { LocaleContext } from "../../context/langProviderV2";
 
 // Styles
 
@@ -64,12 +64,12 @@ const Hamburger = ({ isOpen, onClick }) => {
     }
   `);
 
-  const { currentLanguage } = useContext(LangContext);
+  const { currentLocale } = useContext(LocaleContext);
 
   return (
     <>
       {data.allDatoCmsMenu.nodes
-        .filter(({ locale }) => locale === currentLanguage)
+        .filter(({ locale }) => locale === currentLocale)
         .map(({ locale, ariaLabelHamburger }) => (
           <HamburgerButton
             key={`hamb_${locale}`}

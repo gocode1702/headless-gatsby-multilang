@@ -4,7 +4,7 @@ import { graphql, useStaticQuery, Link } from "gatsby";
 
 import styled from "styled-components";
 
-import { LangContext } from "../../context/languageProvider";
+import { LocaleContext } from "../../context/langProviderV2";
 
 import useLanguages from "../../hooks/useLanguages";
 
@@ -81,65 +81,84 @@ const LanguageSwitcher = () => {
   const { defaultLanguage, defaultBlogPath } = useLanguages();
 
   const {
-    currentLanguage,
-    homeDef,
-    homeSec,
-    isArchiveRoot,
-    isPaginatedArchive,
-    pageNumber,
-    isPage,
-    pageName,
-    isPost,
-    postName,
-  } = useContext(LangContext);
+    currentLocale,
+    pageType,
+    slug: pageSlug,
+    archivePageNumber,
+  } = useContext(LocaleContext);
+
+  const isArchiveRoot = pageType === "isArchive" && archivePageNumber === 1;
 
   return (
     <LangNav>
-      {!isPost && !isPage ? (
+      {pageType === "isHomeDefaultLang" ? (
         <LangNavList>
           {data.allDatoCmsSite.nodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && "activeClassLangNav"}
-                as={locale === currentLanguage && "span"}
-                to={
-                  locale === currentLanguage // Remove attribute if rendering the switcher for the current language
-                    ? "/"
-                    : // Am I rendering the switcher for the default language in a non-default language homepage?
-                    locale === defaultLanguage && homeSec
-                    ? "/"
-                    : // Am I rendering the switcher for a non-default language in a default language homepage?
-                    locale !== defaultLanguage &&
-                      homeDef &&
-                      currentLanguage === defaultLanguage
-                    ? `/${locale}`
-                    : // Am I rendering the switcher for a non-default language in a non-default language homepage?
-                    locale !== defaultLanguage && homeSec
-                    ? `/${locale}`
-                    : // Am I rendering a paginated archive page in default language?
-                    locale === defaultLanguage && isPaginatedArchive
-                    ? `/${defaultBlogPath}/${pageNumber}`
-                    : // Am I rendering a paginated archive page in a non-default language?
-                    locale !== defaultLanguage && isPaginatedArchive
-                    ? `/${locale}/${defaultBlogPath}/${pageNumber}`
-                    : // Am I rendering the root archive page in default language?
-                    locale === defaultLanguage && isArchiveRoot
-                    ? `/${defaultBlogPath}`
-                    : // Am I rendering the root archive page in non-default language?
-                    locale !== defaultLanguage && isArchiveRoot
-                    ? `/${locale}/${defaultBlogPath}`
-                    : "/"
-                }
+                className={locale === currentLocale && "activeClassLangNav"}
+                as={locale === currentLocale && "span"}
+                to={locale === defaultLanguage ? "/" : `/${locale}`}
               >
-                {locale} {/* => Render the language */}
+                {locale}
               </LanguageSwitcherLink>
             </li>
           ))}
         </LangNavList>
-      ) : !isPage && isPost ? (
+      ) : pageType === "IsHomeSecondaryLang" ? (
+        <LangNavList>
+          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+            <li key={locale}>
+              <LanguageSwitcherLink
+                className={locale === currentLocale && "activeClassLangNav"}
+                as={locale === currentLocale && "span"}
+                to={locale === defaultLanguage ? "/" : `/${locale}`}
+              >
+                {locale}
+              </LanguageSwitcherLink>
+            </li>
+          ))}
+        </LangNavList>
+      ) : isArchiveRoot ? (
+        <LangNavList>
+          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+            <li key={locale}>
+              <LanguageSwitcherLink
+                className={locale === currentLocale && "activeClassLangNav"}
+                as={locale === currentLocale && "span"}
+                to={
+                  locale === defaultLanguage
+                    ? `/${defaultBlogPath}`
+                    : `/${locale}/${defaultBlogPath}`
+                }
+              >
+                {locale}
+              </LanguageSwitcherLink>
+            </li>
+          ))}
+        </LangNavList>
+      ) : pageType === "isArchive" && !isArchiveRoot ? (
+        <LangNavList>
+          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+            <li key={locale}>
+              <LanguageSwitcherLink
+                className={locale === currentLocale && "activeClassLangNav"}
+                as={locale === currentLocale && "span"}
+                to={
+                  locale === defaultLanguage
+                    ? `/${defaultBlogPath}/${archivePageNumber}`
+                    : `/${locale}/${defaultBlogPath}/${archivePageNumber}`
+                }
+              >
+                {locale}
+              </LanguageSwitcherLink>
+            </li>
+          ))}
+        </LangNavList>
+      ) : pageType === "isPost" ? (
         <LangNavList>
           {data.allDatoCmsSite.nodes.map(({ locale }) =>
-            locale === currentLanguage ? (
+            locale === currentLocale ? (
               <li key={locale}>
                 <LanguageSwitcherLink as="span" className="activeClassLangNav">
                   {locale}
@@ -154,8 +173,10 @@ const LanguageSwitcher = () => {
                     reference: contextReference,
                   },
                 }) =>
-                  contextSlug === postName && // Is there a page with the same slug as the page I'm rendering
-                  contextLocale === currentLanguage && // which has the same locale of the page I'm rendering? // The above condition will occur only once avoiding duplicated languages rendered inside the switcher when an article has the same slug for different languages
+                  contextSlug === pageSlug &&
+                  // Is there a page with the same slug as the page I'm rendering
+                  contextLocale === currentLocale &&
+                  // which has the same reference of the page I found before?// which has the same locale of the page I'm rendering? // The above condition will occur only once avoiding duplicated languages rendered inside the switcher when an article has the same slug for different languages
                   data.allSitePage.nodes.map(
                     // Ok, iterate again through all the pages...
                     ({
@@ -165,8 +186,10 @@ const LanguageSwitcher = () => {
                         reference: matchReference,
                       },
                     }) =>
-                      matchLocale === locale && // Is there a page of the same locale switcher I am rendering
-                      matchReference === contextReference && ( // which has the same reference of the page I found before?
+                      matchLocale === locale &&
+                      // Is there a page of the same locale switcher I am rendering
+                      matchReference === contextReference && (
+                        // which has the same reference of the page I found before?
                         <li key={locale}>
                           <LanguageSwitcherLink
                             to={
@@ -175,7 +198,7 @@ const LanguageSwitcher = () => {
                                 : `/${locale}/${defaultBlogPath}/${matchSlug}` // => Render the correspondent slug
                             }
                           >
-                            {locale} {/* => Render the locale */}
+                            {locale}
                           </LanguageSwitcherLink>
                         </li>
                       )
@@ -185,11 +208,10 @@ const LanguageSwitcher = () => {
           )}
         </LangNavList>
       ) : (
-        isPage &&
-        !isPost && (
+        pageType === "isPage" && (
           <LangNavList>
             {data.allDatoCmsSite.nodes.map(({ locale }) =>
-              locale === currentLanguage ? (
+              locale === currentLocale ? (
                 <li key={locale}>
                   <LanguageSwitcherLink
                     as="span"
@@ -208,8 +230,8 @@ const LanguageSwitcher = () => {
                       reference: contextReference,
                     },
                   }) =>
-                    contextSlug === pageName &&
-                    contextLocale === currentLanguage &&
+                    contextSlug === pageSlug &&
+                    contextLocale === currentLocale &&
                     data.allSitePage.nodes.map(
                       ({
                         context: {

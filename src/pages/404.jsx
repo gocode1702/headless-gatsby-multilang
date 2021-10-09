@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 
 import { graphql, useStaticQuery } from "gatsby";
 
-import { LangContext } from "../context/languageProvider";
+import { LocaleContext } from "../context/langProviderV2";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
@@ -28,10 +28,10 @@ const NotFoundPage = () => {
     }
   `);
 
-  const { currentLanguage } = useContext(LangContext);
+  const { currentLocale } = useContext(LocaleContext);
 
   const currentLanguageData = data.allDatoCmsNotFoundPage.nodes.filter(
-    (node) => node.locale === currentLanguage
+    (node) => node.locale === currentLocale
   );
 
   const { seo, title, subtitle, backToHomeText } =

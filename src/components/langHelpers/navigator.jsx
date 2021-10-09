@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { Link } from "gatsby";
 
-import { LangContext } from "../../context/languageProvider";
+import { LocaleContext } from "../../context/langProviderV2";
 
 import useLanguages from "../../hooks/useLanguages";
 
@@ -17,7 +17,7 @@ const Navigator = ({
   children,
   to,
 }) => {
-  const { currentLanguage } = useContext(LangContext);
+  const { currentLocale } = useContext(LocaleContext);
 
   const { defaultLanguage, defaultBlogPath } = useLanguages();
   return (
@@ -26,21 +26,21 @@ const Navigator = ({
       className={className}
       to={
         article
-          ? currentLanguage === defaultLanguage
+          ? currentLocale === defaultLanguage
             ? `/${defaultBlogPath}/${to}` // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}/${defaultBlogPath}/${to}` // If navigating from a secondary language page, add current language slug
+            : `/${currentLocale}/${defaultBlogPath}/${to}` // If navigating from a secondary language page, add current language slug
           : page
-          ? currentLanguage === defaultLanguage
+          ? currentLocale === defaultLanguage
             ? `/${to}` // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}/${to}` // If navigating from a secondary language page, add current language slug
+            : `/${currentLocale}/${to}` // If navigating from a secondary language page, add current language slug
           : archive
-          ? currentLanguage === defaultLanguage
+          ? currentLocale === defaultLanguage
             ? `/${defaultBlogPath}` // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}/${defaultBlogPath}` // If navigating from a secondary language page, add current language slug
+            : `/${currentLocale}/${defaultBlogPath}` // If navigating from a secondary language page, add current language slug
           : home
-          ? currentLanguage === defaultLanguage
+          ? currentLocale === defaultLanguage
             ? "/" // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}` // If navigating from a secondary language page, add current language slug
+            : `/${currentLocale}` // If navigating from a secondary language page, add current language slug
           : "/"
       }
     >

@@ -4,9 +4,9 @@ import { Helmet } from "react-helmet";
 
 import { graphql, useStaticQuery } from "gatsby";
 
-import { Main } from "./sectionStyles";
+import { LocaleContext } from "../../context/langProviderV2";
 
-import { LangContext } from "../../context/languageProvider";
+import { useLocation } from "@reach/router";
 
 import useLanguages from "../../hooks/useLanguages";
 
@@ -21,7 +21,6 @@ import Footer from "../ui/footer";
 const PageWrapper = ({
   noHeader,
   noFooter,
-  hasSubsequent,
   children,
   seoTitle,
   seoDescription,
@@ -49,21 +48,19 @@ const PageWrapper = ({
     }
   `);
 
-  const {
-    pathname,
-    currentLanguage,
-    homeDef,
-    homeSec,
-    isPost,
-    isPage,
-    isArchiveRoot,
-    isPaginatedArchive,
-    pageNumber,
-  } = useContext(LangContext);
+  const { currentLocale, pageType, archivePageNumber } =
+    useContext(LocaleContext);
+
+  const { pathname } = useLocation();
 
   const { defaultLanguage } = useLanguages();
 
   const { siteUrl } = useSiteUrl();
+
+  const isHome =
+    pageType === "isHomeDefaultLang" || pageType === "isHomeSecondaryLang";
+
+  const isArchiveRoot = pageType === "isArchive" && archivePageNumber === 1;
 
   return (
     <>
@@ -75,9 +72,9 @@ const PageWrapper = ({
         <link
           rel="manifest"
           href={
-            currentLanguage === defaultLanguage
+            currentLocale === defaultLanguage
               ? `/manifest.webmanifest`
-              : `/manifest_${currentLanguage}.webmanifest`
+              : `/manifest_${currentLocale}.webmanifest`
           }
           crossOrigin="anonymous"
         />
@@ -99,13 +96,13 @@ const PageWrapper = ({
         />
 
         {/* SEO */}
-        <html lang={currentLanguage} />
+        <html lang={currentLocale} />
         <meta property="og:url" content={`${siteUrl}${pathname}`} />
         <meta property="og:type" content="blog" />
         <meta property="twitter:url" content={`${siteUrl}${pathname}`} />
 
         {data.allDatoCmsWebsiteSetting.nodes
-          .filter(({ locale }) => locale === currentLanguage)
+          .filter(({ locale }) => locale === currentLocale)
           .map(
             ({
               title,
@@ -116,15 +113,14 @@ const PageWrapper = ({
               defaultOgImage: { url: defaultImgUrl },
             }) => [
               <title>
-                {(seoTitle && homeDef) ||
-                (seoTitle && homeSec) ||
-                (seoTitle && isPage) ||
+                {(seoTitle && isHome) ||
+                (seoTitle && pageType === "isPage") ||
                 (seoTitle && isArchiveRoot)
                   ? `${seoTitle} ${separator} ${title}`
-                  : seoTitle && isPost
+                  : seoTitle && pageType === "isPost"
                   ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
-                  : seoTitle && isPaginatedArchive
-                  ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                  : seoTitle && pageType === "isArchive" && !isArchiveRoot
+                  ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                   : title}
               </title>,
               <meta
@@ -134,15 +130,14 @@ const PageWrapper = ({
               <meta
                 property="og:title"
                 content={
-                  (seoTitle && homeDef) ||
-                  (seoTitle && homeSec) ||
-                  (seoTitle && isPage) ||
+                  (seoTitle && isHome) ||
+                  (seoTitle && pageType === "isPage") ||
                   (seoTitle && isArchiveRoot)
                     ? `${seoTitle} ${separator} ${title}`
-                    : seoTitle && isPost
+                    : seoTitle && pageType === "isPost"
                     ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
-                    : seoTitle && isPaginatedArchive
-                    ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                    : seoTitle && pageType === "isArchive" && !isArchiveRoot
+                    ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                     : title
                 }
               />,
@@ -154,15 +149,14 @@ const PageWrapper = ({
               <meta
                 property="twitter:title"
                 content={
-                  (seoTitle && homeDef) ||
-                  (seoTitle && homeSec) ||
-                  (seoTitle && isPage) ||
+                  (seoTitle && isHome) ||
+                  (seoTitle && pageType === "isPage") ||
                   (seoTitle && isArchiveRoot)
                     ? `${seoTitle} ${separator} ${title}`
-                    : seoTitle && isPost
+                    : seoTitle && pageType === "isPost"
                     ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
-                    : seoTitle && isPaginatedArchive
-                    ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                    : seoTitle && pageType === "isArchive" && !isArchiveRoot
+                    ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                     : title
                 }
               />,
@@ -179,7 +173,7 @@ const PageWrapper = ({
       </Helmet>
 
       {noHeader || <Header />}
-      <Main hasSubsequent={hasSubsequent}>{children}</Main>
+      <main>{children}</main>
       {noFooter || <Footer />}
     </>
   );

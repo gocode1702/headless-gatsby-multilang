@@ -1,15 +1,5 @@
 import styled from "styled-components";
 
-// Main
-
-export const Main = styled.main`
-  & > section:last-of-type {
-    padding: ${({ hasSubsequent }) =>
-      hasSubsequent &&
-      "var(--globalPaddingLr) var(--globalPaddingLr) var(--globalPaddingTb) var(--globalPaddingLr)"};
-  }
-`;
-
 // Sections
 
 export const SectionWrapper = styled.section`
@@ -20,7 +10,7 @@ export const SectionWrapper = styled.section`
   flex-direction: column;
   position: relative;
 
-  ${({ isBlog, noTopPaddings, hasSubsequent }) => {
+  ${({ isBlog, noTopPaddings }) => {
     if (isBlog) {
       return `
           padding: var(--globalPaddingLr) var(--globalPaddingLr) var(--globalPaddingTb);
@@ -29,11 +19,6 @@ export const SectionWrapper = styled.section`
     if (noTopPaddings) {
       return `
           padding: 0 var(--globalPaddingLr);
-        `;
-    }
-    if (hasSubsequent) {
-      return `
-          padding: var(--globalPaddingLr);
         `;
     }
     return `

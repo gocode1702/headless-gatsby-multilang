@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { StructuredText } from "react-datocms";
 
-import { LangContext } from "../../context/languageProvider";
+import { LocaleContext } from "../../context/langProviderV2";
 
 import { Paragraph } from "../layout/paragraphStyles";
 
@@ -52,14 +52,14 @@ const Footer = () => {
     }
   `);
 
-  const { currentLanguage } = useContext(LangContext);
+  const { currentLocale } = useContext(LocaleContext);
 
   return (
     <SectionWrapper as="footer">
       <Divider top />
       <FooterContainer>
         {data.allDatoCmsFooter.nodes
-          .filter(({ locale }) => locale === currentLanguage)
+          .filter(({ locale }) => locale === currentLocale)
           .map(({ id, textLeft, textRight }) => (
             <Fragment key={id}>
               <Paragraph small centered as="div">
