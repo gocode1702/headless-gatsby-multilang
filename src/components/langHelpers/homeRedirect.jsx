@@ -4,6 +4,8 @@ import { graphql, useStaticQuery, navigate } from "gatsby";
 
 import { useLocation } from "@reach/router";
 
+import useLanguages from "../../hooks/useLanguages";
+
 import useSiteUrl from "../../hooks/useSiteUrl";
 
 const HomeRedirect = ({ children }) => {
@@ -18,6 +20,8 @@ const HomeRedirect = ({ children }) => {
   const { pathname } = useLocation();
 
   const { siteUrl } = useSiteUrl();
+
+  const { defaultLanguage } = useLanguages();
 
   useEffect(() => {
     const websiteLangCodes = data.datoCmsSite.locales;
@@ -41,7 +45,8 @@ const HomeRedirect = ({ children }) => {
     if (
       preferredLanguages.length > 0 &&
       pathname.length === 1 &&
-      !getSavedLocale
+      !getSavedLocale &&
+      preferredLanguages[0] !== defaultLanguage
     ) {
       navigate(`/${preferredLanguages[0]}`);
     }
