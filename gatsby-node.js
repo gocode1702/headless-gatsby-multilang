@@ -97,7 +97,7 @@ exports.createPages = async ({ graphql, actions }) => {
       allDatoCmsBlogPost(sort: { fields: [locale, meta___firstPublishedAt] }) {
         edges {
           node {
-            originalId
+            id: originalId
             locale
             slug
             reference
@@ -150,7 +150,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const ArticleTemplate = path.resolve("src/templates/article.jsx");
 
-  allLanguages.forEach(({ locale: siteLocale }) => {
+  allLanguages.forEach(({ node: { locale: nodeLocale } }) => {
     let pageCounter = 0;
 
     // Iterate trought all available locales, and increase
@@ -159,8 +159,8 @@ exports.createPages = async ({ graphql, actions }) => {
     // we can export a skipNext variable which we will use to skip all the previous posts.
 
     allDatoCmsBlogPost.edges
-      .filter(({ locale }) => locale === siteLocale)
-      .forEach(({ node: { locale, slug, originalId, reference } }) => {
+      .filter(({ node: { locale } }) => locale === nodeLocale)
+      .forEach(({ node: { locale, slug, reference, id } }) => {
         pageCounter += 1;
         createPage({
           path: `${
@@ -172,7 +172,7 @@ exports.createPages = async ({ graphql, actions }) => {
           }`,
           component: ArticleTemplate,
           context: {
-            id: originalId,
+            id,
             locale,
             slug,
             reference,

@@ -31,6 +31,8 @@ const BlogPostTemplate = ({ data, pageContext: { skipNext } }) => {
   const { id, structuredBody, seo, title, subtitle, author, coverImage, meta } =
     data.datoCmsBlogPost;
 
+  console.log(data.next, data.previous);
+
   return (
     <PageWrapper
       seoTitle={seo.title}
