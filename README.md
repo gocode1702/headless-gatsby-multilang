@@ -22,11 +22,12 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 - **100% Headless**: create pages and articles, manage languages, branding, menus, posts per page, SEO, PWA settings, slugs and much more directly on DatoCMS.
 - **Localize everything**: Translate slugs, SEO meta tags, PWA settings, alt tags, WAI-Aria attributes, menus and much more directly on DatoCMS.
-- **Real** SEO meta tags injection via Context API and React Helmet.
-- Language switcher component swapping between different slugs per locale (it supports equal slugs as well)
+- Localized SEO meta tags injection
+- Language switcher component swapping between different and equal slugs per locale
 - Automatic internal links localization using [DAST](https://www.datocms.com/docs/structured-text/dast) and custom `<Navigator />` component
-- Multiple per-locale PWA manifest files generation on build time dynamically injected to `<head />` based on current language.
+- Multiple per-locale PWA manifest files generation on build time, dynamically injected to `<head />` based on current language.
 - Correspondent localized content queried directly inside components by using GraphQL and [useStaticQuery](https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/)
+- Browser locale detection and redirection
 - Paginated archive pages, prev/next article navigation, social sharing and synthax highlighting.
 
 </br>
@@ -37,34 +38,27 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 </br>
 
-## SEO Meta Tags
-
-![SEO Meta Tags](https://i.ibb.co/CWrJFwR/seo.png)
-
-</br>
-
 ## Table of contents
 
-- [Content of the package](#content-of-the-package)
-- [Purpose of the package](#purpose-of-the-package)
-- [When you should not use this starter](#when-you-should-not-use-this-starter)
-- [Why DatoCMS](#why-datocms)
-- [Important notes before starting](#important-notes-before-starting)
-- [How does it works](#how-does-it-works)
-- [Starter installation](#starter-installation)
-- [Starter configuration](#starter-configuration)
-  - [1. Languages](#1-languages)
-  - [2. Fields relationship](#2-fields-relationship)
-  - [3. Pages generation](#3-pages-generation)
-  - [4. Language switcher](#4-language-switcher)
-  - [5. Editing the menu](#5-editing-the-menu)
-  - [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
-  - [7. Creating new templates](#7-creating-new-templates)
-  - [8. Blog features](#8-blog-features)
-  - [9. SEO](#9-seo)
-  - [10. PWA](#10-pwa)
-  - [11. Styling](#11-styling)
-- [Issues](#starter-configuration)
+  * [Content of the package](#content-of-the-package)
+  * [Purpose of the package](#purpose-of-the-package)
+  * [Why DatoCMS](#why-datocms)
+  * [Important notes](#important-notes)
+  * [Starter installation](#starter-installation)
+  * [Starter configuration](#starter-configuration)
+    * [1. Languages](#1-languages)
+    * [2. Fields relationship](#2-fields-relationship)
+    * [3. Pages generation](#3-pages-generation)
+    * [4. Language switcher](#4-language-switcher)
+    * [5. Editing the menu](#5-editing-the-menu)
+    * [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
+    * [7. Creating new templates](#7-creating-new-templates)
+    * [8. Blog features](#8-blog-features)
+    * [9. SEO](#9-seo)
+    * [10. PWA](#10-pwa)
+    * [11. Styling](#11-styling)
+    * [12. Issues](#12-issues)
+
 
 <br />
 
@@ -76,7 +70,7 @@ The package has a very simple organization of the content:
 | ----------------------- | ------------------------------------------ |
 | /components/layout      | Layout and most common reusable components |
 | /components/ui          | Specific UI components                     |
-| /components/langHelpers | `<LanguageSwitcher />` and `<Navigator />` |
+| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />`  and `<HomeRedirect />`|
 | /components/vectors     | JSX icons                                  |
 | /context                | Language provider                          |
 | /hooks                  | Useful useStaticQuery hooks                |
@@ -88,14 +82,7 @@ The package has a very simple organization of the content:
 
 ## Purpose of the package
 
-The whole purpose of this starter is to provide a full JAMstack multilanguage boilerplate by **avoiding** to:
-
-- Configure languages by editing core files
-- Use static markdown files to generate pages
-- Fetch localized data inside components by using JSON files
-- Use an headless CMS exclusively to handle pages generation and slugs
-
-In short, after configuring the starter, your content editors will be able to add and remove languages, style the website, manage SEO and PWA settings, edit the menu, create new posts, translate and share them in a super-friendly decoupled environment.
+The whole purpose of this starter is to provide a full JAMstack multilanguage boilerplate in order to allow your content editors to add/remove languages, style the website, manage SEO and PWA settings, edit the menu, create new posts, translate and share them in a super-friendly decoupled environment.
 
 After publishing any change, a build on Gatsby Cloud will automatically be executed and the website will be updated with new settings and content.
 By enforcing fields validation and presentation, you can safely give your content editors more powers and let them manage more specific aspects of the website like PWA, global SEO and CSS variables.
@@ -103,12 +90,6 @@ By enforcing fields validation and presentation, you can safely give your conten
 I designed the DatoCMS environment taking into account all those aspects but frankly, combinations are infinite and it is always possibile to decouple more and more and more.
 
 I personally think that everyone should be able to do within a JAMstack environment what they already do with Wordpress.
-
-</br>
-
-## When you should not use this starter
-
-If you are planning to handle content locally this starter won't definitely suit you needs.
 
 </br>
 
@@ -131,9 +112,7 @@ However, multi-language features of this starter can be adapted and used with ot
 
 <br />
 
-## Important notes before starting
-
-Customizing and adapting this starter will require a bit of effort on both sides:
+## Important notes
 
 **DatoCMS** - The entire project content and many key settings are hosted on DatoCMS, this means that any content must be entered perfectly: create fieldsets, enforce fields validation and presentation, check carefully field IDs and keep the environment much cleaner as possible.
 
@@ -141,21 +120,7 @@ Customizing and adapting this starter will require a bit of effort on both sides
 
 The list of the available languages comes directly from Dato, and the GraphQL schema for any content model gets updated everytime you add or remove new languages making possible to separate the languages management and the code itself.
 
-Moreover, knowledge of Gatsby's `createPages API` and `pageContext` object is required in order to understand and customize this starter. In any case, everything's perfectly explained [here](https://www.gatsbyjs.com/docs/creating-and-modifying-pages/#trade-offs-of-querying-for-all-fields-in-the-context-object-of-gatsby-nodejs).
-
-<br />
-
-## How does it works
-
-The useState hook performs an URL structure evaluation on each first render and sets the correct current language as its **initial state value** when user accesses a page via direct Link.
-
-By following this approach SEO meta tags for the corresponding language are always injected properly and you will never see any language-update flickering when directly access to a page.
-
-All that React needs to know in order to set the current language is the pathname and all that an user needs to do is to visit an URL.
-
-Since the language path always appears at the beginning of the pathname, and its length always equals to two characters, it is easy to identify the language, the page type and build components' logic.
-
-Due to the unbeatable useStaticQuery hook, it is possible to retrieve data directly inside components. Then with React, is possible to filter and dynamically render the corresponding data for each locale.
+Moreover, knowledge of Gatsby's `createPages API` and `pageContext` object is required in order to customize any starter. In any case, everything's perfectly explained [here](https://www.gatsbyjs.com/docs/creating-and-modifying-pages/#trade-offs-of-querying-for-all-fields-in-the-context-object-of-gatsby-nodejs).
 
 <br />
 
@@ -378,34 +343,32 @@ Remember to always **name** `context` object properties as displayed below.
 A typical dynamic pages generation would look like:
 
 ```js
-  const otherPagesGeneration = await graphql(`
+  const { data: { allDatoCmsOtherPage }, }  = await graphql(`
     query {
       allDatoCmsOtherPage {
-        edges {
-          node {
-            id: originalId
-            locale
-            slug
-            reference
-          }
+        nodes {
+          id: originalId
+          locale
+          slug
+          reference
         }
       }
     }
   `);
 
-  otherPagesGeneration.data.allDatoCmsOtherPage.edges.forEach((edge) => {
+  allDatoCmsOtherPage.nodes.forEach(({ locale, slug, id, reference }) => {
     createPage({
       path: `${
-        edge.node.locale === mainLanguage
-          ? `/${edge.node.slug}`
-          : `${edge.node.locale}/${edge.node.slug}`
+        locale === defaultLanguage
+          ? `/${slug}`
+          : `${locale}/${slug}`
       }`,
       component: OtherPageTemplate,
       context: {
-        id: edge.node.id,
-        locale: edge.node.locale,
-        slug: edge.node.slug,
-        reference: edge.node.reference,
+        id,
+        locale,
+        slug,
+        reference,
       },
     });
   });
@@ -434,14 +397,6 @@ As soon as you add new languages, localize and publish the content, a new langua
 ## 5. Editing the menu
 
 Just edit the content model named **Menu** by adding/removing block items and localize the name and the corresponding slug.
-
-**Note:** It is also possible to manage menu items by using a **relationship** field (without entering manually the slug and the page name).
-
-Although it is very friendly and nice, in case your pages are rendered by a different template, each of them will require an _ad-hoc_ content model, a separate _createPage_ API execution and will have a _dedicated GraphQL field_.
-
-This means that everytime a new page is created, you will have to add the fragment to the header component query and ensure that all the fields ID are named correctly: it's time consuming and a limit to your content editors.
-
-**I personally recommend to stick with the blocks way.**
 
 <br />
 
@@ -662,13 +617,24 @@ import { BackToArchiveButton } from "../components/buttons";
 
 ## 7. Creating new templates
 
+When creating new templates (e.g. single pages), always import and wrap your template around the `LocaleProvider` component. Always assign to the `pageData` prop the entire `pageContext` object:
+
+```js
+...
+
+import LocaleProvider from "../context/langProvider";
+
+const BlogPostTemplate = ({ data, pageContext }) => {
+
+  return (
+    <LocaleProvider pageData={pageContext}>
+
+ ...
+```
+
 DatoCMS recently released [Structured Text Fields](https://www.datocms.com/blog/introducing-structured-text), in my opinion this is a big stride for content editors. Basically, they will be able to create pages and build the entire layout by using blocks which will be rendered by your components.
 
 In the next section, there's an example on how to use custom components to render blocks inserted inside Structured Text Fields.
-
-In order to have a briefly idea, after cloning the project, run the dev server and try to rearrange or duplicate the blocks inside the `structured_body` field for the record named `guide` in the _Other Pages_ content model. You will see the new page layout on the dev server after ~5 seconds.
-
-You can choose the approach that best suits your needs, in this starter I have used the typical approach for _/src/templates/home.jsx_ (no structured text fields), an hybrid approach for _/src/templates/blogPost.jsx_ and a complete approach with _/src/templates/otherPage.jsx_.
 
 <br />
   
@@ -817,16 +783,6 @@ By using DatoCMS relationship fields, each article can have its own Author assig
 
 ## 9. SEO
 
-Unlikely many other Gatsby multilingual starters, this one provides real meta tags injection via Context API, useStaticQuery and React Helmet for any language.
-
-This is possible because, on first rendering, the initial current language state value is directly set by `useState` hook after an URL structure evaluation without a fixed default value.
-
-This means that when Google or the Open Graph protocol will fetch your `<head />`, they will retrieve the correct meta tags' content. In other starters I saw, the initial language state is always equal to the default language, then it gets "corrected" by useEffect after the first render causing SEO to fail.
-
-Moreover, when you access any page via direct link, the content gets initially rendered in the correct language and you will never see any language-update related flickering.
-
-I personally suggest to always check if tags are actually injected (even for non-multilingual starters) by checking the URLs at [metatags.io](https://metatags.io/).
-
 ### 9.1 Configuring Global SEO
 
 Access the **Website Settings** content model and set the Global SEO fields.
@@ -862,14 +818,13 @@ Each template is wrapped in a component named `<PageWrapper />` which accepts th
 If your related content model has a SEO field set, you should definitely set these props and query the related fields.
 
 ```jsx
-const HomePageTemplate = ({ data }) => {
-  const homeData = data.datoCmsHomepage;
+const HomePageTemplate = ({ data: { datoCmsHomePage }, }) => {
 
   return (
     <PageWrapper
-      seoTitle={homeData.seo.title}
-      seoDescription={homeData.seo.description}
-      seoImage={homeData.seo.image.url}
+      seoTitle={datoCmsHomepage.seo.title}
+      seoDescription={datoCmsHomepage.seo.description}
+      seoImage={datoCmsHomepage.seo.image.url}
     >
 
     ...
@@ -915,13 +870,10 @@ Favicon will be generated automatically, based on the above icon. PWA meta tags 
 
 If you wish to customize the manifest JSON schema, you can edit the `manifest` object variables in _gatsby-node.js_, keep in mind that icons are downloaded in different sizes by using different `imgixParams` and aliases in the dedicated query in _gatsby-node.js_.
 
-If you want, you can add [gatsby-plugin-offline](https://www.gatsbyjs.com/plugins/gatsby-plugin-offline/) to let your visitors save the website for offline reading, although it is a cool feature it is totally up to your deciding to install a service worker. For this reason I decided to not implement it by default.
 
 <br />
 
 ## 11. Styling
-
-### 11a. Basic styling
 
 By keeping the default starter configuration, CSS color variables and logo can be configured directly on DatoCMS without no further intervention on the core files. Data is queried in _gatsby-node.js_ and saved to _/src/static_ during build time. Then the JSON file containing the hex color codes is imported in _src/layout/globalStyles.js_ and values are assigned direct to CSS variables. The SVG logo url instead, is queried with useStaticQuery in _src/components/ui/header.jsx_.
 
@@ -943,16 +895,6 @@ const GlobalStyles = createGlobalStyle`
 ```
 
 If this approach doesn't fit your needs, you can safely remove the first block of code in _gatsby-node.js_ commented as "Colors". Then, adjust _createGlobalStyles.js_ and _header.jsx_ and delete the related fields on Dato.
-
----
-
-### 11b. Components styling
-
-Accessing and editing the components is super-simple:
-
-Any JSX file has a default export and a title representing the main component _(e.g. src/components/mobileMenu.jsx)_, above of it you can find and edit all the styled-components used to build it. You most likely will import it as `import MobileMenu from...`
-
-Any other file which doesn't have any default export or JSX code, it is just a JS file grouping different styled components of the same purpose (e.g. /src/layout/sectionStyles.js), you most likely will use them on the same template multiple times by importing them as `import { SectionHero, SectionWrapper... } from...`.
 
 ---
 
