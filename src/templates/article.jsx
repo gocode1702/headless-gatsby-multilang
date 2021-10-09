@@ -14,7 +14,7 @@ import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
-import LocaleProvider from "../context/langProviderV2";
+import LocaleProvider from "../context/langProvider";
 
 import ArticleHeader, { BodyImg } from "../components/ui/articleHeader";
 

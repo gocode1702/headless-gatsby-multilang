@@ -4,7 +4,7 @@ import { graphql, useStaticQuery, Link } from "gatsby";
 
 import styled from "styled-components";
 
-import { LocaleContext } from "../../context/langProviderV2";
+import { LangContext } from "../../context/langProvider";
 
 import LanguageSwitcher from "../langHelpers/languageSwitcher";
 
@@ -16,7 +16,7 @@ import MobileMenu from "./mobileMenu";
 
 import { Divider } from "../layout/sectionStyles";
 
-// Styles
+// Scoped styles
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -107,14 +107,14 @@ const Header = () => {
     }
   `);
 
-  const { currentLocale } = useContext(LocaleContext);
+  const { currentLanguage } = useContext(LangContext);
   const { defaultLanguage } = useLanguages();
 
   return (
     <HeaderWrapper>
       <HeaderContainer>
         {data.allDatoCmsWebsiteSetting.edges
-          .filter(({ node: { locale } }) => locale === currentLocale)
+          .filter(({ node: { locale } }) => locale === currentLanguage)
           .map(
             ({
               node: {
@@ -129,7 +129,7 @@ const Header = () => {
         <Nav>
           <NavList>
             {data.allDatoCmsMenu.edges
-              .filter(({ node: { locale } }) => locale === currentLocale)
+              .filter(({ node: { locale } }) => locale === currentLanguage)
               .map(({ node: { links } }) =>
                 links.map(({ id, slug, locale, ariaLabel, name }) => (
                   <li key={id}>

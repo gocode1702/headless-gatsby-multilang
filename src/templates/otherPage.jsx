@@ -4,7 +4,7 @@ import { graphql } from "gatsby";
 
 import { StructuredText } from "react-datocms";
 
-import LocaleProvider from "../context/langProviderV2";
+import LocaleProvider from "../context/langProvider";
 
 import Navigator from "../components/langHelpers/navigator";
 

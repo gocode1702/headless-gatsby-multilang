@@ -4,7 +4,7 @@ import { graphql } from "gatsby";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
-import LocaleProvider from "../context/langProviderV2";
+import LocaleProvider from "../context/langProvider";
 
 import Hero from "../components/ui/hero";
 

@@ -18,7 +18,7 @@ import Navigator from "../langHelpers/navigator";
 
 import * as Social from "../vectors/socialIcons";
 
-// Styles
+// Scoped styles
 
 const BackButtonWrapper = styled(Navigator)`
   margin-bottom: var(--gapSmall);

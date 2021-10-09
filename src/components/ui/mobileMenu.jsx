@@ -8,9 +8,9 @@ import Hamburger from "./hamburger";
 
 import useLanguages from "../../hooks/useLanguages";
 
-import { LocaleContext } from "../../context/langProviderV2";
+import { LangContext } from "../../context/langProvider";
 
-// Styles
+// Scoped styles
 
 const MobileMenuWrapper = styled.div`
   display: none;
@@ -88,7 +88,7 @@ const MobileMenu = () => {
     }
   `);
 
-  const { currentLocale } = useContext(LocaleContext);
+  const { currentLanguage } = useContext(LangContext);
   const { defaultLanguage } = useLanguages();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +99,7 @@ const MobileMenu = () => {
       <MobileMenuNav isOpen={isOpen} aria-hidden={!isOpen || false}>
         <MobileMenuNavList>
           {data.allDatoCmsMenu.nodes
-            .filter(({ locale }) => locale === currentLocale)
+            .filter(({ locale }) => locale === currentLanguage)
             .map(({ links }) =>
               links.map(({ id, locale, slug, ariaLabel, name }, index) => (
                 <Fragment key={id}>
