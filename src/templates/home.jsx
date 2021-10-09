@@ -41,10 +41,10 @@ const HomePageTemplate = ({ data }) => {
         }
         sectionChildren={
           <SectionContainerGridThreeCols>
-            {features.map((feature) => (
-              <TextBox small key={feature.id}>
-                <HeadingSmall hasTip>{feature.title}</HeadingSmall>
-                <Paragraph>{feature.description}</Paragraph>
+            {features.map(({ id, title, description }) => (
+              <TextBox small key={id}>
+                <HeadingSmall hasTip>{title}</HeadingSmall>
+                <Paragraph>{description}</Paragraph>
               </TextBox>
             ))}
           </SectionContainerGridThreeCols>

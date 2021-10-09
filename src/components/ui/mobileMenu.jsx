@@ -99,24 +99,24 @@ const MobileMenu = () => {
       <MobileMenuNav isOpen={isOpen} aria-hidden={!isOpen || false}>
         <MobileMenuNavList>
           {data.allDatoCmsMenu.nodes
-            .filter((node) => node.locale === currentLanguage)
-            .map((node) =>
-              node.links.map((link, index) => (
-                <Fragment key={link.id}>
+            .filter(({ locale }) => locale === currentLanguage)
+            .map(({ links }) =>
+              links.map(({ id, locale, slug, ariaLabel, name }, index) => (
+                <Fragment key={id}>
                   <li>
                     <Link
                       activeClassName="activeClassLink"
                       to={
-                        node.locale === defaultLanguage
-                          ? `/${link.slug}`
-                          : `/${link.locale}/${link.slug}`
+                        locale === defaultLanguage
+                          ? `/${slug}`
+                          : `/${locale}/${slug}`
                       }
-                      aria-label={link.ariaLabel}
+                      aria-label={ariaLabel}
                     >
-                      {link.name}
+                      {name}
                     </Link>
-                    {node.links.length - 1 !== index && (
-                      <MobileNavDivider key={`div_${link.slug}`} />
+                    {links.length - 1 !== index && (
+                      <MobileNavDivider key={`div_${slug}`} />
                     )}
                   </li>
                 </Fragment>

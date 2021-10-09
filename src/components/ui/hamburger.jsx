@@ -69,17 +69,17 @@ const Hamburger = ({ isOpen, onClick }) => {
   return (
     <>
       {data.allDatoCmsMenu.nodes
-        .filter((node) => node.locale === currentLanguage)
-        .map((node) => (
+        .filter(({ locale }) => locale === currentLanguage)
+        .map(({ locale, ariaLabelHamburger }) => (
           <HamburgerButton
-            key={`hamb_${node.locale}`}
-            aria-label={node.ariaLabelHamburger}
+            key={`hamb_${locale}`}
+            aria-label={ariaLabelHamburger}
             isOpen={isOpen}
             onClick={onClick}
           >
-            <span> </span>
-            <span> </span>
-            <span> </span>
+            <span />
+            <span />
+            <span />
           </HamburgerButton>
         ))}
     </>

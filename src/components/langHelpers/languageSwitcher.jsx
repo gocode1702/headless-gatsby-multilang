@@ -147,20 +147,32 @@ const LanguageSwitcher = () => {
               </li>
             ) : (
               data.allSitePage.nodes.map(
-                ({ context }) =>
-                  context.slug === postName && // Is there a page with the same slug as the page I'm rendering
-                  context.locale === currentLanguage && // which has the same locale of the page I'm rendering? // The above condition will occur only once avoiding duplicated languages rendered inside the switcher when an article has the same slug for different languages
+                ({
+                  context: {
+                    locale: contextLocale,
+                    slug: contextSlug,
+                    reference: contextReference,
+                  },
+                }) =>
+                  contextSlug === postName && // Is there a page with the same slug as the page I'm rendering
+                  contextLocale === currentLanguage && // which has the same locale of the page I'm rendering? // The above condition will occur only once avoiding duplicated languages rendered inside the switcher when an article has the same slug for different languages
                   data.allSitePage.nodes.map(
                     // Ok, iterate again through all the pages...
-                    (matchNode) =>
-                      matchNode.context.locale === locale && // Is there a page of the same locale switcher I am rendering
-                      matchNode.context.reference === context.reference && ( // which has the same reference of the page I found before?
+                    ({
+                      context: {
+                        locale: matchLocale,
+                        slug: matchSlug,
+                        reference: matchReference,
+                      },
+                    }) =>
+                      matchLocale === locale && // Is there a page of the same locale switcher I am rendering
+                      matchReference === contextReference && ( // which has the same reference of the page I found before?
                         <li key={locale}>
                           <LanguageSwitcherLink
                             to={
                               locale === defaultLanguage
-                                ? `/${defaultBlogPath}/${matchNode.context.slug}`
-                                : `/${locale}/${defaultBlogPath}/${matchNode.context.slug}` // => Render the correspondent slug
+                                ? `/${defaultBlogPath}/${matchSlug}`
+                                : `/${locale}/${defaultBlogPath}/${matchSlug}` // => Render the correspondent slug
                             }
                           >
                             {locale} {/* => Render the locale */}
@@ -189,19 +201,31 @@ const LanguageSwitcher = () => {
               ) : (
                 // Follows the same logic adopted above
                 data.allSitePage.nodes.map(
-                  ({ context }) =>
-                    context.slug === pageName &&
-                    context.locale === currentLanguage &&
+                  ({
+                    context: {
+                      locale: contextLocale,
+                      slug: contextSlug,
+                      reference: contextReference,
+                    },
+                  }) =>
+                    contextSlug === pageName &&
+                    contextLocale === currentLanguage &&
                     data.allSitePage.nodes.map(
-                      (matchNode) =>
-                        matchNode.context.locale === locale &&
-                        context.reference === matchNode.context.reference && (
+                      ({
+                        context: {
+                          locale: matchLocale,
+                          slug: matchSlug,
+                          reference: matchReference,
+                        },
+                      }) =>
+                        matchLocale === locale &&
+                        contextReference === matchReference && (
                           <li key={locale}>
                             <LanguageSwitcherLink
                               to={
                                 locale === defaultLanguage
-                                  ? `/${matchNode.context.slug}`
-                                  : `/${locale}/${matchNode.context.slug}`
+                                  ? `/${matchSlug}`
+                                  : `/${locale}/${matchSlug}`
                               }
                             >
                               {locale}

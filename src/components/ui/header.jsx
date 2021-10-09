@@ -114,33 +114,35 @@ const Header = () => {
     <HeaderWrapper>
       <HeaderContainer>
         {data.allDatoCmsWebsiteSetting.edges
-          .filter((edge) => edge.node.locale === currentLanguage)
-          .map((edge) => (
-            <Navigator
-              home
-              ariaLabel={edge.node.logo.title}
-              key={edge.node.logo.title}
-            >
-              <img src={edge.node.logo.url} alt={edge.node.logo.alt} />
-            </Navigator>
-          ))}
+          .filter(({ node: { locale } }) => locale === currentLanguage)
+          .map(
+            ({
+              node: {
+                logo: { url, title, alt },
+              },
+            }) => (
+              <Navigator home ariaLabel={title} key={title}>
+                <img src={url} alt={alt} />
+              </Navigator>
+            )
+          )}
         <Nav>
           <NavList>
             {data.allDatoCmsMenu.edges
-              .filter((edge) => edge.node.locale === currentLanguage)
-              .map((edge) =>
-                edge.node.links.map((link) => (
-                  <li key={link.id}>
+              .filter(({ node: { locale } }) => locale === currentLanguage)
+              .map(({ node: { links } }) =>
+                links.map(({ id, slug, locale, ariaLabel, name }) => (
+                  <li key={id}>
                     <Link
                       activeClassName="activeClassLink"
                       to={
-                        edge.node.locale === defaultLanguage
-                          ? `/${link.slug}`
-                          : `/${link.locale}/${link.slug}`
+                        locale === defaultLanguage
+                          ? `/${slug}`
+                          : `/${locale}/${slug}`
                       }
-                      aria-label={link.ariaLabel}
+                      aria-label={ariaLabel}
                     >
-                      {link.name}
+                      {name}
                     </Link>
                   </li>
                 ))

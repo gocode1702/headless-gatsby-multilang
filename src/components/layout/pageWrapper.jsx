@@ -105,71 +105,77 @@ const PageWrapper = ({
         <meta property="twitter:url" content={`${siteUrl}${pathname}`} />
 
         {data.allDatoCmsWebsiteSetting.nodes
-          .filter((node) => node.locale === currentLanguage)
-          .map((node) => [
-            <title>
-              {(seoTitle && homeDef) ||
-              (seoTitle && homeSec) ||
-              (seoTitle && isPage) ||
-              (seoTitle && isArchiveRoot)
-                ? `${seoTitle} ${node.separator} ${node.title}`
-                : seoTitle && isPost
-                ? `${seoTitle} ${node.separator} ${node.archiveName} ${node.separator} ${node.title}`
-                : seoTitle && isPaginatedArchive
-                ? `${node.pageName} ${pageNumber} ${node.separator} ${seoTitle} ${node.separator} ${node.title}`
-                : node.title}
-            </title>,
-            <meta
-              name="description"
-              content={seoDescription || node.fallbackDescription}
-            />,
-            <meta
-              property="og:title"
-              content={
-                (seoTitle && homeDef) ||
+          .filter(({ locale }) => locale === currentLanguage)
+          .map(
+            ({
+              title,
+              separator,
+              pageName,
+              archiveName,
+              fallbackDescription,
+              defaultOgImage: { url: defaultImgUrl },
+            }) => [
+              <title>
+                {(seoTitle && homeDef) ||
                 (seoTitle && homeSec) ||
                 (seoTitle && isPage) ||
                 (seoTitle && isArchiveRoot)
-                  ? `${seoTitle} ${node.separator} ${node.title}`
+                  ? `${seoTitle} ${separator} ${title}`
                   : seoTitle && isPost
-                  ? `${seoTitle} ${node.separator} ${node.archiveName} ${node.separator} ${node.title}`
+                  ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                   : seoTitle && isPaginatedArchive
-                  ? `${node.pageName} ${pageNumber} ${node.separator} ${seoTitle} ${node.separator} ${node.title}`
-                  : node.title
-              }
-            />,
-            <meta
-              property="og:description"
-              content={seoDescription || node.fallbackDescription}
-            />,
-            <meta
-              property="og:image"
-              content={seoImage || node.defaultOgImage.url}
-            />,
-            <meta
-              property="twitter:title"
-              content={
-                (seoTitle && homeDef) ||
-                (seoTitle && homeSec) ||
-                (seoTitle && isPage) ||
-                (seoTitle && isArchiveRoot)
-                  ? `${seoTitle} ${node.separator} ${node.title}`
-                  : seoTitle && isPost
-                  ? `${seoTitle} ${node.separator} ${node.archiveName} ${node.separator} ${node.title}`
-                  : seoTitle && isPaginatedArchive
-                  ? `${node.pageName} ${pageNumber} ${node.separator} ${seoTitle} ${node.separator} ${node.title}`
-                  : node.title
-              }
-            />,
-            <meta
-              property="twitter:description"
-              content={seoDescription || node.fallbackDescription}
-            />,
-            <meta
-              property="twitter:image"
-              content={seoImage || node.defaultOgImage.url}
-            />,
-          ])}
+                  ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                  : title}
+              </title>,
+              <meta
+                name="description"
+                content={seoDescription || fallbackDescription}
+              />,
+              <meta
+                property="og:title"
+                content={
+                  (seoTitle && homeDef) ||
+                  (seoTitle && homeSec) ||
+                  (seoTitle && isPage) ||
+                  (seoTitle && isArchiveRoot)
+                    ? `${seoTitle} ${separator} ${title}`
+                    : seoTitle && isPost
+                    ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
+                    : seoTitle && isPaginatedArchive
+                    ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                    : title
+                }
+              />,
+              <meta
+                property="og:description"
+                content={seoDescription || fallbackDescription}
+              />,
+              <meta property="og:image" content={seoImage || defaultImgUrl} />,
+              <meta
+                property="twitter:title"
+                content={
+                  (seoTitle && homeDef) ||
+                  (seoTitle && homeSec) ||
+                  (seoTitle && isPage) ||
+                  (seoTitle && isArchiveRoot)
+                    ? `${seoTitle} ${separator} ${title}`
+                    : seoTitle && isPost
+                    ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
+                    : seoTitle && isPaginatedArchive
+                    ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                    : title
+                }
+              />,
+              <meta
+                property="twitter:description"
+                content={seoDescription || fallbackDescription}
+              />,
+              <meta
+                property="twitter:image"
+                content={seoImage || defaultImgUrl}
+              />,
+            ]
+          )}
       </Helmet>
 
       {noHeader || <Header />}

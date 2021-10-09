@@ -59,14 +59,14 @@ const Footer = () => {
       <Divider top />
       <FooterContainer>
         {data.allDatoCmsFooter.nodes
-          .filter((node) => node.locale === currentLanguage)
-          .map((node) => (
-            <Fragment key={node.id}>
+          .filter(({ locale }) => locale === currentLanguage)
+          .map(({ id, textLeft, textRight }) => (
+            <Fragment key={id}>
               <Paragraph small centered as="div">
-                <StructuredText data={node.textLeft.value} />
+                <StructuredText data={textLeft.value} />
               </Paragraph>
               <Paragraph small centered as="div">
-                <StructuredText data={node.textRight.value} />
+                <StructuredText data={textRight.value} />
               </Paragraph>
             </Fragment>
           ))}

@@ -124,7 +124,6 @@ const OtherPageTemplate = ({ data }) => {
                             <StructuredText
                               data={text}
                               renderLinkToRecord={({
-                                record,
                                 children,
                                 transformedMeta,
                               }) => {

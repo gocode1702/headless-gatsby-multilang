@@ -13,7 +13,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Colors - Begin
 
-  const settingsQuery = await graphql(`
+  const {
+    data: { datoCmsWebsiteSetting: colorSettings },
+  } = await graphql(`
     query {
       datoCmsWebsiteSetting {
         primaryColor {
@@ -48,7 +50,6 @@ exports.createPages = async ({ graphql, actions }) => {
   `);
 
   // Query the settings model on DatoCMS and define a path to export the queried settings
-  const settings = settingsQuery.data.datoCmsWebsiteSetting;
   const settingsPath = "src/static";
 
   // Create the path if it doesn't exist
@@ -57,7 +58,7 @@ exports.createPages = async ({ graphql, actions }) => {
   // Save the JSON file with css color variables
   fs.writeFileSync(
     `${settingsPath}/settings.json`,
-    JSON.stringify(settings, undefined, 2)
+    JSON.stringify(colorSettings, undefined, 2)
   );
 
   // Colors - End
@@ -67,7 +68,9 @@ exports.createPages = async ({ graphql, actions }) => {
   // Blog and locales settings query, the first block is used to retrieve blog settings and
   // the second one to retrieve a list of all languages available
 
-  const globalSettingsQuery = await graphql(`
+  const {
+    data: { datoCmsWebsiteSetting: blogSettings, allDatoCmsSite },
+  } = await graphql(`
     query {
       datoCmsWebsiteSetting {
         blogPath
@@ -87,7 +90,9 @@ exports.createPages = async ({ graphql, actions }) => {
   // Blog posts should be sorted using the same fields as in any other template
   // in order to have a coherent prev/next navigation.
 
-  const blogQuery = await graphql(`
+  const {
+    data: { allDatoCmsBlogPost },
+  } = await graphql(`
     query {
       allDatoCmsBlogPost(sort: { fields: [locale, meta___firstPublishedAt] }) {
         edges {
@@ -102,38 +107,36 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `);
 
-  const defaultLanguage =
-    globalSettingsQuery.data.allDatoCmsSite.edges[0].node.locale;
-  const blogPathName = globalSettingsQuery.data.datoCmsWebsiteSetting.blogPath;
-  const allLanguages = globalSettingsQuery.data.allDatoCmsSite.edges;
-  const allBlogPosts = blogQuery.data.allDatoCmsBlogPost.edges;
+  const defaultLanguage = allDatoCmsSite.edges[0].node.locale;
+  const blogPathName = blogSettings.blogPath;
+  const allLanguages = allDatoCmsSite.edges;
+  const allBlogPosts = allDatoCmsBlogPost.edges;
   const allBlogPostsPerLocale = allBlogPosts.length / allLanguages.length;
-  const postsPerPage = // eslint-disable-line prefer-destructuring
-    globalSettingsQuery.data.datoCmsWebsiteSetting.postsPerPage; // eslint-disable-line prefer-destructuring
+  const postsPerPage = blogSettings.postsPerPage; // eslint-disable-line prefer-destructuring // eslint-disable-line prefer-destructuring
   const pagesNumber = Math.ceil(allBlogPostsPerLocale / postsPerPage);
 
   const ArchiveTemplate = path.resolve("src/templates/archive.jsx");
 
-  allLanguages.forEach((edge) => {
+  allLanguages.forEach(({ node: { locale } }) => {
     Array.from({ length: pagesNumber }).forEach((_, index) => {
       createPage({
         path:
           // If generating the first default language archive page
-          edge.node.locale === defaultLanguage && index === 0
+          locale === defaultLanguage && index === 0
             ? `/${blogPathName}` // => /blog
             : // If not generating the first default language archive page
-            edge.node.locale === defaultLanguage && index > 0
+            locale === defaultLanguage && index > 0
             ? `/${blogPathName}/${index + 1}` // => /blog/num
             : // If generating the first non-default language archive page
-            edge.node.locale !== defaultLanguage && index === 0
-            ? `/${edge.node.locale}/${blogPathName}` // => /lang/blog
+            locale !== defaultLanguage && index === 0
+            ? `/${locale}/${blogPathName}` // => /lang/blog
             : // If not generation the first non-default language archive page
-            edge.node.locale !== defaultLanguage && index > 0
-            ? `/${edge.node.locale}/${blogPathName}/${index + 1}` // => /lang/blog/num
+            locale !== defaultLanguage && index > 0
+            ? `/${locale}/${blogPathName}/${index + 1}` // => /lang/blog/num
             : "/",
         component: ArchiveTemplate,
         context: {
-          locale: edge.node.locale,
+          locale: locale,
           limit: postsPerPage,
           skip: index * postsPerPage,
           pagesNumber,
@@ -147,7 +150,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const ArticleTemplate = path.resolve("src/templates/article.jsx");
 
-  allLanguages.forEach((language) => {
+  allLanguages.forEach(({ locale: siteLocale }) => {
     let pageCounter = 0;
 
     // Iterate trought all available locales, and increase
@@ -155,24 +158,24 @@ exports.createPages = async ({ graphql, actions }) => {
     // since the query results are sorted with the same field for each locale
     // we can export a skipNext variable which we will use to skip all the previous posts.
 
-    blogQuery.data.allDatoCmsBlogPost.edges
-      .filter((edge) => edge.node.locale === language.node.locale)
-      .forEach((edge) => {
+    allDatoCmsBlogPost.edges
+      .filter(({ locale }) => locale === siteLocale)
+      .forEach(({ node: { locale, slug, originalId, reference } }) => {
         pageCounter += 1;
         createPage({
           path: `${
-            edge.node.locale === defaultLanguage
-              ? `${blogPathName}/${edge.node.slug}`
-              : edge.node.locale !== defaultLanguage
-              ? `${edge.node.locale}/${blogPathName}/${edge.node.slug}`
+            locale === defaultLanguage
+              ? `${blogPathName}/${slug}`
+              : locale !== defaultLanguage
+              ? `${locale}/${blogPathName}/${slug}`
               : "/"
           }`,
           component: ArticleTemplate,
           context: {
-            id: edge.node.originalId,
-            locale: edge.node.locale,
-            slug: edge.node.slug,
-            reference: edge.node.reference,
+            id: originalId,
+            locale,
+            slug,
+            reference,
             articlesPerLocale: allBlogPostsPerLocale,
 
             // If generating the last article, assign the value "0" since
@@ -193,7 +196,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Homepage Generation - Based on a specific template
 
-  const homePageGeneration = await graphql(`
+  const {
+    data: { allDatoCmsHomepage },
+  } = await graphql(`
     query {
       allDatoCmsHomepage {
         nodes {
@@ -205,7 +210,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const HomePageTemplate = path.resolve("src/templates/home.jsx");
 
-  homePageGeneration.data.allDatoCmsHomepage.nodes.forEach(({ locale }) => {
+  allDatoCmsHomepage.nodes.forEach(({ locale }) => {
     createPage({
       path: `${locale === defaultLanguage ? "/" : locale}`,
       component: HomePageTemplate,
@@ -217,7 +222,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Other pages generation - Sharing the same template
 
-  const otherPagesGeneration = await graphql(`
+  const {
+    data: { allDatoCmsOtherPage },
+  } = await graphql(`
     query {
       allDatoCmsOtherPage {
         nodes {
@@ -232,26 +239,24 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const OtherPageTemplate = path.resolve("src/templates/otherPage.jsx");
 
-  otherPagesGeneration.data.allDatoCmsOtherPage.nodes.forEach(
-    ({ locale, slug, id, reference }) => {
-      createPage({
-        path: `${
-          locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`
-        }`,
-        component: OtherPageTemplate,
-        context: {
-          id,
-          locale,
-          slug,
-          reference,
-        },
-      });
-    }
-  );
+  allDatoCmsOtherPage.nodes.forEach(({ locale, slug, id, reference }) => {
+    createPage({
+      path: `${locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`}`,
+      component: OtherPageTemplate,
+      context: {
+        id,
+        locale,
+        slug,
+        reference,
+      },
+    });
+  });
 
   // Webmanifest generation
 
-  const webManifestGeneration = await graphql(`
+  const {
+    data: { allDatoCmsWebsiteSetting },
+  } = await graphql(`
     query {
       allDatoCmsWebsiteSetting {
         nodes {
@@ -282,7 +287,7 @@ exports.createPages = async ({ graphql, actions }) => {
     locale,
     backgroundColor,
     primaryColor,
-  } = webManifestGeneration.data.allDatoCmsWebsiteSetting.nodes[0];
+  } = allDatoCmsWebsiteSetting.nodes[0];
 
   const publicPath = "public";
   const imagesPath = "public/images";
@@ -345,42 +350,50 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Additional language webmanifest files generation
 
-  const additionalLanguages =
-    webManifestGeneration.data.allDatoCmsWebsiteSetting.nodes.length;
+  const additionalLanguages = allDatoCmsWebsiteSetting.nodes.length;
 
   if (additionalLanguages > 1) {
-    webManifestGeneration.data.allDatoCmsWebsiteSetting.nodes
+    allDatoCmsWebsiteSetting.nodes
       .filter(({ locale }) => locale !== defaultLanguage) // Exclude default language already generated
-      .forEach((node) => {
-        const manifest = {
-          name: node.name,
-          short_name: node.shortName,
-          description: node.description,
-          lang: node.locale,
-          display: "standalone",
-          start_url: `/${node.locale}/`,
-          background_color: backgroundColor.hex,
-          theme_color: primaryColor.hex,
-          icons: [
-            {
-              src: "images/icon-192.png",
-              type: "image/png",
-              sizes: "192x192",
-              purpose: "any maskable",
-            },
-            {
-              src: "images/icon-512.png",
-              type: "image/png",
-              sizes: "512x512",
-              purpose: "any maskable",
-            },
-          ],
-          cacheDigest: null,
-        };
-        fs.writeFileSync(
-          `${publicPath}/manifest_${node.locale}.webmanifest`,
-          JSON.stringify(manifest, undefined, 2)
-        );
-      });
+      .forEach(
+        ({
+          name,
+          shortName,
+          description,
+          locale,
+          backgroundColor,
+          primaryColor,
+        }) => {
+          const manifest = {
+            name,
+            short_name: shortName,
+            description,
+            lang: locale,
+            display: "standalone",
+            start_url: `/${locale}/`,
+            background_color: backgroundColor.hex,
+            theme_color: primaryColor.hex,
+            icons: [
+              {
+                src: "images/icon-192.png",
+                type: "image/png",
+                sizes: "192x192",
+                purpose: "any maskable",
+              },
+              {
+                src: "images/icon-512.png",
+                type: "image/png",
+                sizes: "512x512",
+                purpose: "any maskable",
+              },
+            ],
+            cacheDigest: null,
+          };
+          fs.writeFileSync(
+            `${publicPath}/manifest_${locale}.webmanifest`,
+            JSON.stringify(manifest, undefined, 2)
+          );
+        }
+      );
   }
 };

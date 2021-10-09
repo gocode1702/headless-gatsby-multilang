@@ -28,40 +28,49 @@ const BlogArchiveTemplate = ({ data, pageContext }) => {
   const { currentLanguage } = useContext(LangContext);
   const { currentPage, pagesNumber, locale } = pageContext;
 
-  const archiveData = data.datoCmsArchivePage;
+  const {
+    datoCmsArchivePage: { hero, seo },
+  } = data;
+
+  const { allDatoCmsBlogPost } = data;
 
   return (
-    <PageWrapper
-      seoTitle={archiveData.seo.title}
-      seoDescription={archiveData.seo.description}
-    >
-      <Hero
-        title={archiveData.hero[0].heroTitle}
-        subtitle={archiveData.hero[0].heroSubtitle}
-      />
+    <PageWrapper seoTitle={seo.title} seoDescription={seo.description}>
+      <Hero title={hero[0].heroTitle} subtitle={hero[0].heroSubtitle} />
       <SectionWrapper isBlog>
         <SectionContainerGridThreeCols>
-          {data.allDatoCmsBlogPost.nodes.map((node) => (
-            <ArticleCard
-              key={node.id}
-              date={node.meta.publishedAt}
-              time={`${node.minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
-              cardImg={
-                node.cardImage &&
-                CardImgArtDir(
-                  node.cardImage.gatsbyImageData,
-                  node.cardImage.squaredImage,
-                  node.cardImage.alt
-                )
-              }
-              title={node.title}
-              excerpt={node.subtitle}
-              authorImg={node.author && node.author.picture.gatsbyImageData}
-              authorAltImg={node.author && node.author.picture.alt}
-              authorName={node.author && node.author.name}
-              slug={node.slug}
-            />
-          ))}
+          {allDatoCmsBlogPost.nodes.map(
+            ({
+              id,
+              meta,
+              minutesOfReading,
+              cardImage,
+              title,
+              subtitle,
+              author,
+              slug,
+            }) => (
+              <ArticleCard
+                key={id}
+                date={meta.publishedAt}
+                time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
+                cardImg={
+                  cardImage &&
+                  CardImgArtDir(
+                    cardImage.gatsbyImageData,
+                    cardImage.squaredImage,
+                    cardImage.alt
+                  )
+                }
+                title={title}
+                excerpt={subtitle}
+                authorImg={author && author.picture.gatsbyImageData}
+                authorAltImg={author && author.picture.alt}
+                authorName={author && author.name}
+                slug={slug}
+              />
+            )
+          )}
         </SectionContainerGridThreeCols>
         <ArchiveNav>
           <ArchiveList>
