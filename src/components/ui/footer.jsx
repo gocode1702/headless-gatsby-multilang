@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { StructuredText } from "react-datocms";
 
-import { LangContext } from "../../context/languageProvider";
+import { LangContext } from "../../context/langProvider";
 
 import { Paragraph } from "../layout/paragraphStyles";
 

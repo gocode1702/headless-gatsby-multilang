@@ -8,7 +8,7 @@ import Navigator from "../langHelpers/navigator";
 
 import { HeadingSmall } from "../layout/headingStyles";
 
-// Styles
+// Scoped styles
 
 const CardLink = styled(Navigator)`
   width: 280px;

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { Link } from "gatsby";
 
-import { LangContext } from "../../context/languageProvider";
+import { LangContext } from "../../context/langProvider";
 
 import useLanguages from "../../hooks/useLanguages";
 
@@ -16,6 +16,7 @@ const Navigator = ({
   text,
   children,
   to,
+  notFoundPage,
 }) => {
   const { currentLanguage } = useContext(LangContext);
 
@@ -41,6 +42,8 @@ const Navigator = ({
           ? currentLanguage === defaultLanguage
             ? "/" // If navigating from a default language page, keep link as it is
             : `/${currentLanguage}` // If navigating from a secondary language page, add current language slug
+          : notFoundPage
+          ? notFoundPage
           : "/"
       }
     >

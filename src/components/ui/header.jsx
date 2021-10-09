@@ -4,7 +4,7 @@ import { graphql, useStaticQuery, Link } from "gatsby";
 
 import styled from "styled-components";
 
-import { LangContext } from "../../context/languageProvider";
+import { LangContext } from "../../context/langProvider";
 
 import LanguageSwitcher from "../langHelpers/languageSwitcher";
 
@@ -16,7 +16,7 @@ import MobileMenu from "./mobileMenu";
 
 import { Divider } from "../layout/sectionStyles";
 
-// Styles
+// Scoped styles
 
 const HeaderWrapper = styled.header`
   display: flex;

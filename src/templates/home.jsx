@@ -4,7 +4,11 @@ import { graphql } from "gatsby";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
+import LocaleProvider from "../context/langProvider";
+
 import Navigator from "../components/langHelpers/navigator";
+
+import HomeRedirect from "../components/langHelpers/homeRedirect";
 
 import Hero from "../components/ui/hero";
 
@@ -21,80 +25,84 @@ import { Paragraph } from "../components/layout/paragraphStyles";
 
 import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
 
-const HomePageTemplate = ({ data }) => {
+const HomePageTemplate = ({ data, pageContext }) => {
   const { seo, hero, features } = data.datoCmsHomepage;
 
   return (
-    <PageWrapper seoTitle={seo.title} seoDescription={seo.description}>
-      <Hero
-        hasDivider
-        alt={hero[0].heroAlt}
-        title={hero[0].heroTitle}
-        subtitle={hero[0].heroSubtitle}
-        button={
-          <Navigator
-            className="classicButton classicButtonOutline"
-            page
-            to={data.guidePageLink.slug}
-            text={data.datoCmsWebsiteSetting.seeTheGuideButton}
-          />
-        }
-        sectionChildren={
-          <SectionContainerGridThreeCols>
-            {features.map(({ id, title, description }) => (
-              <TextBox small key={id}>
-                <HeadingSmall hasTip>{title}</HeadingSmall>
-                <Paragraph>{description}</Paragraph>
-              </TextBox>
-            ))}
-          </SectionContainerGridThreeCols>
-        }
-      />
-      <SectionWrapper>
-        <SectionTitleContainer hasButton>
-          <SectionTitle>Featured posts</SectionTitle>
-          <Navigator
-            archive
-            className="classicButton classicButtonOutline"
-            text={data.datoCmsWebsiteSetting.seeAllButton}
-          />
-        </SectionTitleContainer>
-        <SectionContainerGridThreeCols>
-          {data.allDatoCmsBlogPost.nodes.map(
-            ({
-              id,
-              meta,
-              minutesOfReading,
-              cardImage,
-              title,
-              subtitle,
-              author,
-              slug,
-            }) => (
-              <ArticleCard
-                key={id}
-                date={meta.publishedAt}
-                time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
-                cardImg={
-                  cardImage &&
-                  CardImgArtDir(
-                    cardImage.gatsbyImageData,
-                    cardImage.squaredImage,
-                    cardImage.alt
-                  )
-                }
-                title={title}
-                excerpt={subtitle}
-                authorImg={author.picture.gatsbyImageData}
-                authorAltImg={author.picture.alt}
-                authorName={author.name}
-                slug={slug}
+    <HomeRedirect>
+      <LocaleProvider pageData={pageContext}>
+        <PageWrapper seoTitle={seo.title} seoDescription={seo.description}>
+          <Hero
+            hasDivider
+            alt={hero[0].heroAlt}
+            title={hero[0].heroTitle}
+            subtitle={hero[0].heroSubtitle}
+            button={
+              <Navigator
+                className="classicButton classicButtonOutline"
+                page
+                to={data.guidePageLink.slug}
+                text={data.datoCmsWebsiteSetting.seeTheGuideButton}
               />
-            )
-          )}
-        </SectionContainerGridThreeCols>
-      </SectionWrapper>
-    </PageWrapper>
+            }
+            sectionChildren={
+              <SectionContainerGridThreeCols>
+                {features.map(({ id, title, description }) => (
+                  <TextBox small key={id}>
+                    <HeadingSmall hasTip>{title}</HeadingSmall>
+                    <Paragraph>{description}</Paragraph>
+                  </TextBox>
+                ))}
+              </SectionContainerGridThreeCols>
+            }
+          />
+          <SectionWrapper>
+            <SectionTitleContainer hasButton>
+              <SectionTitle>Featured posts</SectionTitle>
+              <Navigator
+                archive
+                className="classicButton classicButtonOutline"
+                text={data.datoCmsWebsiteSetting.seeAllButton}
+              />
+            </SectionTitleContainer>
+            <SectionContainerGridThreeCols>
+              {data.allDatoCmsBlogPost.nodes.map(
+                ({
+                  id,
+                  meta,
+                  minutesOfReading,
+                  cardImage,
+                  title,
+                  subtitle,
+                  author,
+                  slug,
+                }) => (
+                  <ArticleCard
+                    key={id}
+                    date={meta.publishedAt}
+                    time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
+                    cardImg={
+                      cardImage &&
+                      CardImgArtDir(
+                        cardImage.gatsbyImageData,
+                        cardImage.squaredImage,
+                        cardImage.alt
+                      )
+                    }
+                    title={title}
+                    excerpt={subtitle}
+                    authorImg={author.picture.gatsbyImageData}
+                    authorAltImg={author.picture.alt}
+                    authorName={author.name}
+                    slug={slug}
+                  />
+                )
+              )}
+            </SectionContainerGridThreeCols>
+          </SectionWrapper>
+        </PageWrapper>
+      </LocaleProvider>
+    </HomeRedirect>
   );
 };
 

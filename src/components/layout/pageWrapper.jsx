@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 
-import { Helmet } from "react-helmet";
-
 import { graphql, useStaticQuery } from "gatsby";
 
-import { Main } from "./sectionStyles";
+import { Helmet } from "react-helmet";
 
-import { LangContext } from "../../context/languageProvider";
+import { LangContext } from "../../context/langProvider";
+
+import { useLocation } from "@reach/router";
 
 import useLanguages from "../../hooks/useLanguages";
 
@@ -21,7 +21,6 @@ import Footer from "../ui/footer";
 const PageWrapper = ({
   noHeader,
   noFooter,
-  hasSubsequent,
   children,
   seoTitle,
   seoDescription,
@@ -49,21 +48,28 @@ const PageWrapper = ({
     }
   `);
 
-  const {
-    pathname,
-    currentLanguage,
-    homeDef,
-    homeSec,
-    isPost,
-    isPage,
-    isArchiveRoot,
-    isPaginatedArchive,
-    pageNumber,
-  } = useContext(LangContext);
+  const { currentLanguage, pageType, archivePageNumber } =
+    useContext(LangContext);
+
+  const { pathname } = useLocation();
 
   const { defaultLanguage } = useLanguages();
 
   const { siteUrl } = useSiteUrl();
+
+  const isHome =
+    pageType === "isHomeDefaultLang" || pageType === "isHomeSecondaryLang";
+
+  const isArchiveRoot = pageType === "isArchive" && archivePageNumber === 1;
+
+  const isPaginatedArchive = pageType === "isArchive" && !isArchiveRoot;
+
+  const isPost = pageType === "isPost";
+
+  const hasDefaultSchema =
+    (seoTitle && isHome) ||
+    (seoTitle && pageType === "isPage") ||
+    (seoTitle && isArchiveRoot);
 
   return (
     <>
@@ -116,15 +122,12 @@ const PageWrapper = ({
               defaultOgImage: { url: defaultImgUrl },
             }) => [
               <title>
-                {(seoTitle && homeDef) ||
-                (seoTitle && homeSec) ||
-                (seoTitle && isPage) ||
-                (seoTitle && isArchiveRoot)
+                {hasDefaultSchema
                   ? `${seoTitle} ${separator} ${title}`
                   : seoTitle && isPost
                   ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                   : seoTitle && isPaginatedArchive
-                  ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                  ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                   : title}
               </title>,
               <meta
@@ -134,15 +137,12 @@ const PageWrapper = ({
               <meta
                 property="og:title"
                 content={
-                  (seoTitle && homeDef) ||
-                  (seoTitle && homeSec) ||
-                  (seoTitle && isPage) ||
-                  (seoTitle && isArchiveRoot)
+                  hasDefaultSchema
                     ? `${seoTitle} ${separator} ${title}`
                     : seoTitle && isPost
                     ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                     : seoTitle && isPaginatedArchive
-                    ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                    ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                     : title
                 }
               />,
@@ -154,15 +154,12 @@ const PageWrapper = ({
               <meta
                 property="twitter:title"
                 content={
-                  (seoTitle && homeDef) ||
-                  (seoTitle && homeSec) ||
-                  (seoTitle && isPage) ||
-                  (seoTitle && isArchiveRoot)
+                  hasDefaultSchema
                     ? `${seoTitle} ${separator} ${title}`
                     : seoTitle && isPost
                     ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                     : seoTitle && isPaginatedArchive
-                    ? `${pageName} ${pageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                    ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                     : title
                 }
               />,
@@ -179,7 +176,7 @@ const PageWrapper = ({
       </Helmet>
 
       {noHeader || <Header />}
-      <Main hasSubsequent={hasSubsequent}>{children}</Main>
+      <main>{children}</main>
       {noFooter || <Footer />}
     </>
   );

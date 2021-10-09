@@ -140,7 +140,8 @@ exports.createPages = async ({ graphql, actions }) => {
           limit: postsPerPage,
           skip: index * postsPerPage,
           pagesNumber,
-          currentPage: index + 1,
+          archivePageNumber: index + 1,
+          pageType: "isArchive",
         },
       });
     });
@@ -163,13 +164,12 @@ exports.createPages = async ({ graphql, actions }) => {
       .forEach(({ node: { locale, slug, reference, id } }) => {
         pageCounter += 1;
         createPage({
-          path: `${
+          path:
             locale === defaultLanguage
               ? `${blogPathName}/${slug}`
               : locale !== defaultLanguage
               ? `${locale}/${blogPathName}/${slug}`
-              : "/"
-          }`,
+              : "/",
           component: ArticleTemplate,
           context: {
             id,
@@ -177,6 +177,7 @@ exports.createPages = async ({ graphql, actions }) => {
             slug,
             reference,
             articlesPerLocale: allBlogPostsPerLocale,
+            pageType: "isPost",
 
             // If generating the last article, assign the value "0" since
             // there won't be next posts to display
@@ -212,10 +213,14 @@ exports.createPages = async ({ graphql, actions }) => {
 
   allDatoCmsHomepage.nodes.forEach(({ locale }) => {
     createPage({
-      path: `${locale === defaultLanguage ? "/" : locale}`,
+      path: locale === defaultLanguage ? "/" : locale,
       component: HomePageTemplate,
       context: {
         locale,
+        pageType:
+          locale === defaultLanguage
+            ? "isHomeDefaultLang"
+            : "IsHomeSecondaryLang",
       },
     });
   });
@@ -241,13 +246,14 @@ exports.createPages = async ({ graphql, actions }) => {
 
   allDatoCmsOtherPage.nodes.forEach(({ locale, slug, id, reference }) => {
     createPage({
-      path: `${locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`}`,
+      path: locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`,
       component: OtherPageTemplate,
       context: {
         id,
         locale,
         slug,
         reference,
+        pageType: "isPage",
       },
     });
   });

@@ -1,8 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import React from "react";
 
 import { graphql, useStaticQuery } from "gatsby";
 
-import { LangContext } from "../context/languageProvider";
+import useSiteUrl from "../hooks/useSiteUrl";
+
+import useLanguages from "../hooks/useLanguages";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
@@ -28,79 +30,76 @@ const NotFoundPage = () => {
     }
   `);
 
-  const { currentLanguage } = useContext(LangContext);
-
-  const currentLanguageData = data.allDatoCmsNotFoundPage.nodes.filter(
-    (node) => node.locale === currentLanguage
-  );
-
   const { seo, title, subtitle, backToHomeText } =
     data.allDatoCmsNotFoundPage.nodes[0];
 
-  // In order to avoid localized content update flickerings when 404 GET errors occur, let's delay the rendering of the page by 200ms until URL evaluation is completed
+  const isSSR = typeof window === "undefined";
 
-  const [isReachReady, setIsReachReady] = useState(false);
+  const { defaultLanguage } = useLanguages();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsReachReady(true);
-    }, 200);
-  }, []);
+  const { siteUrl } = useSiteUrl();
 
-  const getProps = () => {
-    // If user tries to access a non-existent language path e.g. /kx/blog, display data in default language
-    if (currentLanguageData[0] === undefined)
+  if (!isSSR) {
+    const getSavedLocale = localStorage.getItem(
+      `${siteUrl.slice(8)}_preferred_lang`
+    );
+
+    const currentLanguageData = data.allDatoCmsNotFoundPage.nodes.filter(
+      ({ locale }) => locale === getSavedLocale
+    )[0];
+
+    const getProps = () => {
+      // If user never visited the website and never set the language preference,
+      // Or he set the preference for the default language, display data in default language
+      if (!getSavedLocale || getSavedLocale === defaultLanguage)
+        return {
+          pageWrapper: {
+            seoTitle: seo.title,
+            seoDescription: seo.description,
+          },
+          hero: {
+            title,
+            subtitle,
+          },
+          navigator: {
+            text: backToHomeText,
+            to: "/",
+          },
+        };
+
+      // Else display corresponding data for saved language
       return {
         pageWrapper: {
-          seoTitle: seo.title,
-          seoDescription: seo.description,
+          seoTitle: currentLanguageData.seo.title,
+          seoDescription: currentLanguageData.seo.description,
         },
         hero: {
-          title: title,
-          subtitle: subtitle,
+          title: currentLanguageData.title,
+          subtitle: currentLanguageData.subtitle,
         },
         navigator: {
-          text: backToHomeText,
-          to: "/",
+          text: currentLanguageData.backToHomeText,
+          notFoundPage: `/${getSavedLocale}`,
         },
       };
-
-    // Else display corresponding filtered data
-    return {
-      pageWrapper: {
-        seoTitle: currentLanguageData[0].seo.title,
-        seoDescription: currentLanguageData[0].seo.description,
-      },
-      hero: {
-        title: currentLanguageData[0].title,
-        subtitle: currentLanguageData[0].subtitle,
-      },
-      navigator: {
-        text: currentLanguageData[0].backToHomeText,
-        home: true,
-      },
     };
-  };
 
-  return (
-    <>
-      {isReachReady && (
-        <PageWrapper {...getProps().pageWrapper} noHeader noFooter>
-          <Hero
-            {...getProps().hero}
-            fullView
-            centered
-            button={
-              <Navigator
-                {...getProps().navigator}
-                className="classicButton classicButtonOutline"
-              />
-            }
-          />
-        </PageWrapper>
-      )}
-    </>
-  );
+    return (
+      <PageWrapper {...getProps().pageWrapper} noHeader noFooter>
+        <Hero
+          {...getProps().hero}
+          fullView
+          centered
+          button={
+            <Navigator
+              {...getProps().navigator}
+              className="classicButton classicButtonOutline"
+            />
+          }
+        />
+      </PageWrapper>
+    );
+  } else return null;
 };
 
 export default NotFoundPage;

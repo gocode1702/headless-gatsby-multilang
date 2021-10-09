@@ -8,9 +8,9 @@ import Hamburger from "./hamburger";
 
 import useLanguages from "../../hooks/useLanguages";
 
-import { LangContext } from "../../context/languageProvider";
+import { LangContext } from "../../context/langProvider";
 
-// Styles
+// Scoped styles
 
 const MobileMenuWrapper = styled.div`
   display: none;

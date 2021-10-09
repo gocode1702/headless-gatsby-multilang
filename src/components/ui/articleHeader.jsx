@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import styled from "styled-components";
 
 import { GatsbyImage } from "gatsby-plugin-image";
 
-import { LangContext } from "../../context/languageProvider";
+import { useLocation } from "@reach/router";
 
 import useSiteUrl from "../../hooks/useSiteUrl";
 
@@ -18,7 +18,7 @@ import Navigator from "../langHelpers/navigator";
 
 import * as Social from "../vectors/socialIcons";
 
-// Styles
+// Scoped styles
 
 const BackButtonWrapper = styled(Navigator)`
   margin-bottom: var(--gapSmall);
@@ -180,7 +180,7 @@ const ArticleHeader = ({
 }) => {
   const { siteUrl } = useSiteUrl();
 
-  const { pathname } = useContext(LangContext);
+  const { pathname } = useLocation();
 
   return (
     <>

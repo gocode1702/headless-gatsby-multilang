@@ -4,9 +4,9 @@ import styled, { css } from "styled-components";
 
 import { graphql, useStaticQuery } from "gatsby";
 
-import { LangContext } from "../../context/languageProvider";
+import { LangContext } from "../../context/langProvider";
 
-// Styles
+// Scoped styles
 
 const HamburgerButton = styled.button`
   padding: 0.33em;
