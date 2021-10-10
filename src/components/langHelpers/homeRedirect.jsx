@@ -38,25 +38,51 @@ const HomeRedirect = ({ children }) => {
       `${siteUrl.slice(8)}_preferred_lang`
     );
 
-    // If user accesses the homepage in default language ("/") for the first time ever via direct link and
-    // no browser language matches any website language, do nothing
-    if (!preferredLanguages) {
+    // If user accesses the homepage in default language ("/") for the first time ever and
+    // no browser language matches any website language, save the website default language as preferred locale
+    if (!preferredLanguages && pathname.length === 1) {
       saveLocale(siteUrl, defaultLanguage);
       return;
     }
 
-    // If it is the very first time that the user visits the website
-    // but a browser language matched with the browser available languages
-    const commonPattern =
+    // If user accesses the homepage in secondary language ("/it", "/es") for the first time ever and
+    // no browser language matches any website language, save the language path as preferred locale
+    if (!preferredLanguages && pathname.length === 3) {
+      saveLocale(siteUrl, pathname.slice(1, 3));
+      return;
+    }
+
+    const noPreferredLang_visitsRoot =
       preferredLanguages.length > 0 && pathname.length === 1 && !getSavedLocale;
 
-    if (commonPattern && preferredLanguages[0] === defaultLanguage) {
+    const noPreferredLang_visitsSecondary =
+      pathname.length === 3 && !getSavedLocale;
+
+    if (
+      // If it is the very first time that the user visits the website root ("/")
+      // and a browser language matches the default website language
+      noPreferredLang_visitsRoot &&
+      preferredLanguages[0] === defaultLanguage
+    ) {
       // Save the preferred locale
       saveLocale(siteUrl, preferredLanguages[0]);
-    } else if (commonPattern && preferredLanguages[0] !== defaultLanguage) {
-      // And redirect to the its homepage in case is different than the default language of the website
+    } else if (
+      // If it is the very first time that the user visits the website root ("/")
+      // and a browser language matches a secondary website language
+      noPreferredLang_visitsRoot &&
+      preferredLanguages[0] !== defaultLanguage
+    ) {
+      // Save the locale and redirect to the its specific homepage
       navigate(`/${preferredLanguages[0]}`);
       saveLocale(siteUrl, preferredLanguages[0]);
+    } else if (
+      // If it is the very first time that the user visits the website home in a secondary language ("/it", "/es")
+      // and a browser language matches a secondary website language
+      noPreferredLang_visitsSecondary &&
+      preferredLanguages[0] !== defaultLanguage
+    ) {
+      // Save the locale and perform no redirect
+      saveLocale(siteUrl, pathname.slice(1, 3));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
