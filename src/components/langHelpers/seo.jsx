@@ -103,13 +103,17 @@ const Seo = ({
 
       {/* SEO */}
 
+      <meta charSet="utf-8" />
       <html lang={currentLanguage || notFoundPageLocale} />
       <meta property="og:url" content={`${siteUrl}${pathname}`} />
       <meta property="og:type" content="blog" />
       <meta property="twitter:url" content={`${siteUrl}${pathname}`} />
 
       {data.allDatoCmsWebsiteSetting.nodes
-        .filter(({ locale }) => locale === currentLanguage)
+        .filter(
+          ({ locale }) =>
+            locale === currentLanguage || locale === notFoundPageLocale
+        )
         .map(
           ({
             title,
@@ -127,7 +131,7 @@ const Seo = ({
                 : seoTitle && isPaginatedArchive
                 ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
                 : notFoundPage
-                ? `${seoTitle}`
+                ? seoTitle
                 : title}
             </title>,
             <meta
