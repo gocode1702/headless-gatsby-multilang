@@ -45,15 +45,16 @@ const HomeRedirect = ({ children }) => {
       return;
     }
 
-    // Instead, redirect to the first preferred browser language
-    // homepage that matches one of the available website languages
-
+    // If it is the very first time that the user visits the website
+    // but a browser language matched with the browser available languages
     const commonPattern =
       preferredLanguages.length > 0 && pathname.length === 1 && !getSavedLocale;
 
     if (commonPattern && preferredLanguages[0] === defaultLanguage) {
+      // Save the preferred locale
       saveLocale(siteUrl, preferredLanguages[0]);
     } else if (commonPattern && preferredLanguages[0] !== defaultLanguage) {
+      // And redirect to the its homepage in case is different than the default language of the website
       navigate(`/${preferredLanguages[0]}`);
       saveLocale(siteUrl, preferredLanguages[0]);
     }

@@ -11,6 +11,7 @@ import PageWrapper from "../components/layout/pageWrapper";
 import Hero from "../components/ui/hero";
 
 import Navigator from "../components/langHelpers/navigator";
+
 import { saveLocale } from "../components/langHelpers/utils";
 
 const NotFoundPage = () => {
@@ -82,12 +83,11 @@ const NotFoundPage = () => {
     };
 
     const getProps = () => {
-      // If user never visited the website and never set the language preference,
-      // Or he set the preference for the default language, display data in default language
-
+      // If user never visited the website and no browser languages match any website language
       if (!getSavedLocale && !preferredLanguages)
         return { ...defaultLangProps };
 
+      // If user never visited the website and its preferred language is equal to defaultLanguage
       if (
         !getSavedLocale &&
         preferredLanguages.length > 0 &&
@@ -97,6 +97,7 @@ const NotFoundPage = () => {
         return { ...defaultLangProps };
       }
 
+      // If user never visited the website and its preferred language is not equal to defaultLanguage
       if (
         !getSavedLocale &&
         preferredLanguages.length > 0 &&
@@ -121,6 +122,7 @@ const NotFoundPage = () => {
         };
       }
 
+      // If user already visited the website and its preferred language is equal to defaultLanguage
       if (getSavedLocale === defaultLanguage) return { ...defaultLangProps };
 
       // Else display corresponding data for saved language
