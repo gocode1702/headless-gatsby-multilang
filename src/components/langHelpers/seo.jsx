@@ -12,7 +12,14 @@ import useLanguages from "../../hooks/useLanguages";
 
 import useSiteUrl from "../../hooks/useSiteUrl";
 
-const Seo = ({ seoTitle, seoDescription, seoImage }) => {
+const Seo = ({
+  seoTitle,
+  seoDescription,
+  seoImage,
+  notFoundPage,
+  notFoundPageLocale,
+  notFoundPageManifest,
+}) => {
   const data = useStaticQuery(graphql`
     query {
       allDatoCmsWebsiteSetting {
@@ -59,15 +66,21 @@ const Seo = ({ seoTitle, seoDescription, seoImage }) => {
   const hasDefaultSchema =
     (seoTitle && isHome) || (seoTitle && isPage) || (seoTitle && isArchiveRoot);
 
+  console.log(notFoundPage);
+
   return (
     <Helmet>
-      {/* PWA Tags */}
+      {/* PWA */}
       <link
         rel="manifest"
         href={
           currentLanguage === defaultLanguage
-            ? `/manifest.webmanifest`
-            : `/manifest_${currentLanguage}.webmanifest`
+            ? "/manifest.webmanifest"
+            : !notFoundPage && currentLanguage !== defaultLanguage
+            ? `/manifest_${currentLanguage}.webmanifest`
+            : notFoundPage
+            ? notFoundPageManifest
+            : "/"
         }
         crossOrigin="anonymous"
       />
@@ -89,7 +102,8 @@ const Seo = ({ seoTitle, seoDescription, seoImage }) => {
       />
 
       {/* SEO */}
-      <html lang={currentLanguage || defaultLanguage} />
+
+      <html lang={currentLanguage || notFoundPageLocale} />
       <meta property="og:url" content={`${siteUrl}${pathname}`} />
       <meta property="og:type" content="blog" />
       <meta property="twitter:url" content={`${siteUrl}${pathname}`} />
@@ -112,6 +126,8 @@ const Seo = ({ seoTitle, seoDescription, seoImage }) => {
                 ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                 : seoTitle && isPaginatedArchive
                 ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                : notFoundPage
+                ? `${seoTitle}`
                 : title}
             </title>,
             <meta
@@ -127,6 +143,8 @@ const Seo = ({ seoTitle, seoDescription, seoImage }) => {
                   ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                   : seoTitle && isPaginatedArchive
                   ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                  : notFoundPage
+                  ? seoTitle
                   : title
               }
             />,
@@ -144,6 +162,8 @@ const Seo = ({ seoTitle, seoDescription, seoImage }) => {
                   ? `${seoTitle} ${separator} ${archiveName} ${separator} ${title}`
                   : seoTitle && isPaginatedArchive
                   ? `${pageName} ${archivePageNumber} ${separator} ${seoTitle} ${separator} ${title}`
+                  : notFoundPage
+                  ? seoTitle
                   : title
               }
             />,

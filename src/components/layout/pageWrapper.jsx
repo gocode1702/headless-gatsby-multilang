@@ -8,10 +8,16 @@ import Header from "../ui/header";
 
 import Footer from "../ui/footer";
 
+import LangProvider from "../../context/langProvider";
+
 const PageWrapper = ({
+  pageData,
   seoTitle,
   seoDescription,
   seoImage,
+  notFoundPage,
+  notFoundPageLocale,
+  notFoundPageManifest,
   noHeader,
   noFooter,
   children,
@@ -19,17 +25,22 @@ const PageWrapper = ({
   <>
     <GlobalStyles />
 
-    <Seo
-      seoTitle={seoTitle}
-      seoDescription={seoDescription}
-      seoImage={seoImage}
-    />
+    <LangProvider pageData={pageData || notFoundPage}>
+      <Seo
+        seoTitle={seoTitle}
+        seoDescription={seoDescription}
+        seoImage={seoImage}
+        notFoundPage={notFoundPage}
+        notFoundPageLocale={notFoundPageLocale}
+        notFoundPageManifest={notFoundPageManifest}
+      />
 
-    {noHeader || <Header />}
+      {noHeader || <Header />}
 
-    <main>{children}</main>
+      <main>{children}</main>
 
-    {noFooter || <Footer />}
+      {noFooter || <Footer />}
+    </LangProvider>
   </>
 );
 

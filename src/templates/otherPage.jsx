@@ -4,8 +4,6 @@ import { graphql } from "gatsby";
 
 import { StructuredText } from "react-datocms";
 
-import LocaleProvider from "../context/langProvider";
-
 import Navigator from "../components/langHelpers/navigator";
 
 import PageWrapper from "../components/layout/pageWrapper";
@@ -32,168 +30,161 @@ const OtherPageTemplate = ({ data, pageContext }) => {
   const { seo, structuredBody } = data.datoCmsOtherPage;
 
   return (
-    <LocaleProvider pageData={pageContext}>
-      <PageWrapper
-        seoTitle={seo.title}
-        seoDescription={seo.description}
-        seoImage={seo.image.url}
-      >
-        {structuredBody.value && (
-          <StructuredText
-            data={structuredBody}
-            renderBlock={({
-              record: {
-                typeName,
-                heroAlt,
-                heroTitle,
-                heroSubtitle,
-                image,
-                title,
-                text,
-                slug,
-                firstFeatureTitle,
-                firstFeatureDescription,
-                secondFeatureTitle,
-                secondFeatureDescription,
-                thirdFeatureTitle,
-                thirdFeatureDescription,
-              },
-            }) => {
-              switch (typeName) {
-                case "hero":
-                  return (
-                    <Hero
-                      alt={heroAlt}
-                      title={heroTitle}
-                      subtitle={heroSubtitle}
-                    />
-                  );
-                case "section image left":
-                  return (
-                    <SectionWrapper>
-                      <SectionContainerFlexTwoCols>
-                        <ColumnFlexTwoCols hasImg>
-                          <img src={image.url} alt={image.alt} />
-                        </ColumnFlexTwoCols>
-                        <ColumnFlexTwoCols>
-                          <TextBox as="div">
-                            <HeadingMedium>{title}</HeadingMedium>
-                            <Paragraph as="div">
-                              <StructuredText
-                                data={text}
-                                renderLinkToRecord={({
-                                  record,
-                                  children,
-                                  transformedMeta,
-                                }) => {
-                                  switch (typeName) {
-                                    case "page":
-                                      return (
-                                        <Navigator
-                                          {...transformedMeta}
-                                          page
-                                          to={slug}
-                                        >
-                                          {children}
-                                        </Navigator>
-                                      );
-                                    case "home":
-                                      return (
-                                        <Navigator {...transformedMeta} home>
-                                          {children}
-                                        </Navigator>
-                                      );
+    <PageWrapper
+      pageData={pageContext}
+      seoTitle={seo.title}
+      seoDescription={seo.description}
+      seoImage={seo.image.url}
+    >
+      {structuredBody.value && (
+        <StructuredText
+          data={structuredBody}
+          renderBlock={({
+            record: {
+              typeName,
+              heroAlt,
+              heroTitle,
+              heroSubtitle,
+              image,
+              title,
+              text,
+              slug,
+              firstFeatureTitle,
+              firstFeatureDescription,
+              secondFeatureTitle,
+              secondFeatureDescription,
+              thirdFeatureTitle,
+              thirdFeatureDescription,
+            },
+          }) => {
+            switch (typeName) {
+              case "hero":
+                return (
+                  <Hero
+                    alt={heroAlt}
+                    title={heroTitle}
+                    subtitle={heroSubtitle}
+                  />
+                );
+              case "section image left":
+                return (
+                  <SectionWrapper>
+                    <SectionContainerFlexTwoCols>
+                      <ColumnFlexTwoCols hasImg>
+                        <img src={image.url} alt={image.alt} />
+                      </ColumnFlexTwoCols>
+                      <ColumnFlexTwoCols>
+                        <TextBox as="div">
+                          <HeadingMedium>{title}</HeadingMedium>
+                          <Paragraph as="div">
+                            <StructuredText
+                              data={text}
+                              renderLinkToRecord={({
+                                record,
+                                children,
+                                transformedMeta,
+                              }) => {
+                                switch (typeName) {
+                                  case "page":
+                                    return (
+                                      <Navigator
+                                        {...transformedMeta}
+                                        page
+                                        to={slug}
+                                      >
+                                        {children}
+                                      </Navigator>
+                                    );
+                                  case "home":
+                                    return (
+                                      <Navigator {...transformedMeta} home>
+                                        {children}
+                                      </Navigator>
+                                    );
 
-                                    default:
-                                      return null;
-                                  }
-                                }}
-                              />
-                            </Paragraph>
-                          </TextBox>
-                        </ColumnFlexTwoCols>
-                      </SectionContainerFlexTwoCols>
-                    </SectionWrapper>
-                  );
-                case "section image right":
-                  return (
-                    <SectionWrapper>
-                      <SectionContainerFlexTwoColsReverse>
-                        <ColumnFlexTwoCols>
-                          <TextBox as="div">
-                            <HeadingMedium>{title}</HeadingMedium>
-                            <Paragraph as="div">
-                              <StructuredText
-                                data={text}
-                                renderLinkToRecord={({
-                                  children,
-                                  transformedMeta,
-                                }) => {
-                                  switch (typeName) {
-                                    case "page":
-                                      return (
-                                        <Navigator
-                                          {...transformedMeta}
-                                          page
-                                          to={slug}
-                                        >
-                                          {children}
-                                        </Navigator>
-                                      );
-                                    case "home":
-                                      return (
-                                        <Navigator {...transformedMeta} home>
-                                          {children}
-                                        </Navigator>
-                                      );
+                                  default:
+                                    return null;
+                                }
+                              }}
+                            />
+                          </Paragraph>
+                        </TextBox>
+                      </ColumnFlexTwoCols>
+                    </SectionContainerFlexTwoCols>
+                  </SectionWrapper>
+                );
+              case "section image right":
+                return (
+                  <SectionWrapper>
+                    <SectionContainerFlexTwoColsReverse>
+                      <ColumnFlexTwoCols>
+                        <TextBox as="div">
+                          <HeadingMedium>{title}</HeadingMedium>
+                          <Paragraph as="div">
+                            <StructuredText
+                              data={text}
+                              renderLinkToRecord={({
+                                children,
+                                transformedMeta,
+                              }) => {
+                                switch (typeName) {
+                                  case "page":
+                                    return (
+                                      <Navigator
+                                        {...transformedMeta}
+                                        page
+                                        to={slug}
+                                      >
+                                        {children}
+                                      </Navigator>
+                                    );
+                                  case "home":
+                                    return (
+                                      <Navigator {...transformedMeta} home>
+                                        {children}
+                                      </Navigator>
+                                    );
 
-                                    default:
-                                      return null;
-                                  }
-                                }}
-                              />
-                            </Paragraph>
-                          </TextBox>
-                        </ColumnFlexTwoCols>
-                        <ColumnFlexTwoCols hasImg>
-                          <img src={image.url} alt={image.alt} />
-                        </ColumnFlexTwoCols>
-                      </SectionContainerFlexTwoColsReverse>
-                    </SectionWrapper>
-                  );
-                case "three features set":
-                  return (
-                    <SectionWrapper>
-                      <SectionContainerGridThreeCols>
-                        <TextBox small>
-                          <HeadingSmall hasTip>
-                            {firstFeatureTitle}
-                          </HeadingSmall>
-                          <Paragraph>{firstFeatureDescription}</Paragraph>
+                                  default:
+                                    return null;
+                                }
+                              }}
+                            />
+                          </Paragraph>
                         </TextBox>
-                        <TextBox small>
-                          <HeadingSmall hasTip>
-                            {secondFeatureTitle}
-                          </HeadingSmall>
-                          <Paragraph>{secondFeatureDescription}</Paragraph>
-                        </TextBox>
-                        <TextBox small>
-                          <HeadingSmall hasTip>
-                            {thirdFeatureTitle}
-                          </HeadingSmall>
-                          <Paragraph>{thirdFeatureDescription}</Paragraph>
-                        </TextBox>
-                      </SectionContainerGridThreeCols>
-                    </SectionWrapper>
-                  );
-                default:
-                  return null;
-              }
-            }}
-          />
-        )}
-      </PageWrapper>
-    </LocaleProvider>
+                      </ColumnFlexTwoCols>
+                      <ColumnFlexTwoCols hasImg>
+                        <img src={image.url} alt={image.alt} />
+                      </ColumnFlexTwoCols>
+                    </SectionContainerFlexTwoColsReverse>
+                  </SectionWrapper>
+                );
+              case "three features set":
+                return (
+                  <SectionWrapper>
+                    <SectionContainerGridThreeCols>
+                      <TextBox small>
+                        <HeadingSmall hasTip>{firstFeatureTitle}</HeadingSmall>
+                        <Paragraph>{firstFeatureDescription}</Paragraph>
+                      </TextBox>
+                      <TextBox small>
+                        <HeadingSmall hasTip>{secondFeatureTitle}</HeadingSmall>
+                        <Paragraph>{secondFeatureDescription}</Paragraph>
+                      </TextBox>
+                      <TextBox small>
+                        <HeadingSmall hasTip>{thirdFeatureTitle}</HeadingSmall>
+                        <Paragraph>{thirdFeatureDescription}</Paragraph>
+                      </TextBox>
+                    </SectionContainerGridThreeCols>
+                  </SectionWrapper>
+                );
+              default:
+                return null;
+            }
+          }}
+        />
+      )}
+    </PageWrapper>
   );
 };
 export default OtherPageTemplate;

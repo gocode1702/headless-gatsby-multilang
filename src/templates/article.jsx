@@ -14,8 +14,6 @@ import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
-import LocaleProvider from "../context/langProvider";
-
 import ArticleHeader, { BodyImg } from "../components/ui/articleHeader";
 
 import {
@@ -34,129 +32,124 @@ const BlogPostTemplate = ({ data, pageContext }) => {
     data.datoCmsBlogPost;
 
   return (
-    <LocaleProvider pageData={pageContext}>
-      <PageWrapper
-        seoTitle={seo.title}
-        seoDescription={seo.description}
-        seoImage={seo.image.url}
-      >
-        <SectionWrapper as="article" isBlog article>
-          <ArticleHeader
-            title={title}
-            subtitle={subtitle}
-            authorName={author.name}
-            coverImg={coverImage.gatsbyImageData}
-            coverImgAlt={coverImage.alt}
-            authorImg={author.picture.gatsbyImageData}
-            authorImgAlt={author.picture.alt}
-            date={meta.firstPublishedAt}
-          />
-          <ArticleBody>
-            {!structuredBody.value || (
-              <StructuredText
-                key={id}
-                data={structuredBody}
-                customRules={[
-                  renderRule(isCode, ({ node, key }) => (
-                    <div style={{ position: "relative" }} key={key}>
-                      <LanguageContainer>{node.language}</LanguageContainer>
-                      <SyntaxHighlighter
-                        language={node.language}
-                        style={atomDark}
-                      >
-                        {node.code}
-                      </SyntaxHighlighter>
-                    </div>
-                  )),
-                ]}
-                renderLinkToRecord={({ record, children, transformedMeta }) => {
-                  switch (record.typeName) {
-                    case "page":
-                      return (
-                        <Navigator {...transformedMeta} page to={record.slug}>
-                          {children}
-                        </Navigator>
-                      );
-                    case "article":
-                      return (
-                        <Navigator
-                          {...transformedMeta}
-                          article
-                          to={record.slug}
-                        >
-                          {children}
-                        </Navigator>
-                      );
-                    case "archive":
-                      return (
-                        <Navigator {...transformedMeta} archive>
-                          {children}
-                        </Navigator>
-                      );
-                    case "home":
-                      return (
-                        <Navigator {...transformedMeta} home>
-                          {children}
-                        </Navigator>
-                      );
+    <PageWrapper
+      pageData={pageContext}
+      seoTitle={seo.title}
+      seoDescription={seo.description}
+      seoImage={seo.image.url}
+    >
+      <SectionWrapper as="article" isBlog article>
+        <ArticleHeader
+          title={title}
+          subtitle={subtitle}
+          authorName={author.name}
+          coverImg={coverImage.gatsbyImageData}
+          coverImgAlt={coverImage.alt}
+          authorImg={author.picture.gatsbyImageData}
+          authorImgAlt={author.picture.alt}
+          date={meta.firstPublishedAt}
+        />
+        <ArticleBody>
+          {!structuredBody.value || (
+            <StructuredText
+              key={id}
+              data={structuredBody}
+              customRules={[
+                renderRule(isCode, ({ node, key }) => (
+                  <div style={{ position: "relative" }} key={key}>
+                    <LanguageContainer>{node.language}</LanguageContainer>
+                    <SyntaxHighlighter
+                      language={node.language}
+                      style={atomDark}
+                    >
+                      {node.code}
+                    </SyntaxHighlighter>
+                  </div>
+                )),
+              ]}
+              renderLinkToRecord={({ record, children, transformedMeta }) => {
+                switch (record.typeName) {
+                  case "page":
+                    return (
+                      <Navigator {...transformedMeta} page to={record.slug}>
+                        {children}
+                      </Navigator>
+                    );
+                  case "article":
+                    return (
+                      <Navigator {...transformedMeta} article to={record.slug}>
+                        {children}
+                      </Navigator>
+                    );
+                  case "archive":
+                    return (
+                      <Navigator {...transformedMeta} archive>
+                        {children}
+                      </Navigator>
+                    );
+                  case "home":
+                    return (
+                      <Navigator {...transformedMeta} home>
+                        {children}
+                      </Navigator>
+                    );
 
-                    default:
-                      return null;
-                  }
-                }}
-                renderBlock={({ record }) => {
-                  switch (record.typeName) {
-                    case "image":
-                      return (
-                        <BodyImg
-                          image={record.image.gatsbyImageData}
-                          alt={record.image.alt}
-                        />
-                      );
-                    default:
-                      return null;
-                  }
-                }}
-              />
-            )}
-          </ArticleBody>
-          <PrevNextNav
-            previousNavRender={
-              <>
-                <div>
-                  {pageContext.skipNext >= 0 && pageContext.skipNext !== 1 && (
-                    <>
-                      <span>{data.datoCmsWebsiteSetting.previous}</span>
-                      <h2>
-                        <Navigator article to={data.previous.nodes[0].slug}>
-                          {data.previous.nodes[0].title}
-                        </Navigator>
-                      </h2>
-                    </>
-                  )}
-                </div>
-              </>
-            }
-            nextNavRender={
-              <>
-                <div>
-                  {pageContext.skipNext > 0 && (
-                    <>
-                      <span>{data.datoCmsWebsiteSetting.next}</span>
-                      <h2>
-                        <Navigator article to={data.next.nodes[0].slug}>
-                          {data.next.nodes[0].title}
-                        </Navigator>
-                      </h2>
-                    </>
-                  )}
-                </div>
-              </>
-            }
-          />
-        </SectionWrapper>
-      </PageWrapper>
-    </LocaleProvider>
+                  default:
+                    return null;
+                }
+              }}
+              renderBlock={({ record }) => {
+                switch (record.typeName) {
+                  case "image":
+                    return (
+                      <BodyImg
+                        image={record.image.gatsbyImageData}
+                        alt={record.image.alt}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              }}
+            />
+          )}
+        </ArticleBody>
+        <PrevNextNav
+          previousNavRender={
+            <>
+              <div>
+                {pageContext.skipNext >= 0 && pageContext.skipNext !== 1 && (
+                  <>
+                    <span>{data.datoCmsWebsiteSetting.previous}</span>
+                    <h2>
+                      <Navigator article to={data.previous.nodes[0].slug}>
+                        {data.previous.nodes[0].title}
+                      </Navigator>
+                    </h2>
+                  </>
+                )}
+              </div>
+            </>
+          }
+          nextNavRender={
+            <>
+              <div>
+                {pageContext.skipNext > 0 && (
+                  <>
+                    <span>{data.datoCmsWebsiteSetting.next}</span>
+                    <h2>
+                      <Navigator article to={data.next.nodes[0].slug}>
+                        {data.next.nodes[0].title}
+                      </Navigator>
+                    </h2>
+                  </>
+                )}
+              </div>
+            </>
+          }
+        />
+      </SectionWrapper>
+    </PageWrapper>
   );
 };
 

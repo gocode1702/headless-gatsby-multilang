@@ -56,13 +56,15 @@ const NotFoundPage = () => {
           pageWrapper: {
             seoTitle: seo.title,
             seoDescription: seo.description,
+            notFoundPageLocale: defaultLanguage,
+            notFoundPageManifest: "/manifest.webmanifest",
           },
           hero: {
             title,
             subtitle,
           },
           navigator: {
-            text: backToHomeText,
+            children: backToHomeText,
             to: "/",
           },
         };
@@ -72,20 +74,22 @@ const NotFoundPage = () => {
         pageWrapper: {
           seoTitle: currentLanguageData.seo.title,
           seoDescription: currentLanguageData.seo.description,
+          notFoundPageLocale: getSavedLocale,
+          notFoundPageManifest: `/manifest_${getSavedLocale}.webmanifest`,
         },
         hero: {
           title: currentLanguageData.title,
           subtitle: currentLanguageData.subtitle,
         },
         navigator: {
-          text: currentLanguageData.backToHomeText,
+          children: currentLanguageData.backToHomeText,
           notFoundPage: `/${getSavedLocale}`,
         },
       };
     };
 
     return (
-      <PageWrapper {...getProps().pageWrapper} noHeader noFooter>
+      <PageWrapper {...getProps().pageWrapper} notFoundPage noHeader noFooter>
         <Hero
           {...getProps().hero}
           fullView
