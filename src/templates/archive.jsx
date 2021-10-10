@@ -4,8 +4,6 @@ import { graphql } from "gatsby";
 
 import PageWrapper from "../components/layout/pageWrapper";
 
-import LocaleProvider from "../context/langProvider";
-
 import Hero from "../components/ui/hero";
 
 import useLanguages from "../hooks/useLanguages";
@@ -34,76 +32,78 @@ const BlogArchiveTemplate = ({ data, pageContext }) => {
   const { allDatoCmsBlogPost } = data;
 
   return (
-    <LocaleProvider pageData={pageContext}>
-      <PageWrapper seoTitle={seo.title} seoDescription={seo.description}>
-        <Hero title={hero[0].heroTitle} subtitle={hero[0].heroSubtitle} />
-        <SectionWrapper isBlog>
-          <SectionContainerGridThreeCols>
-            {allDatoCmsBlogPost.nodes.map(
-              ({
-                id,
-                meta,
-                minutesOfReading,
-                cardImage,
-                title,
-                subtitle,
-                author,
-                slug,
-              }) => (
-                <ArticleCard
-                  key={id}
-                  date={meta.publishedAt}
-                  time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
-                  cardImg={
-                    cardImage &&
-                    CardImgArtDir(
-                      cardImage.gatsbyImageData,
-                      cardImage.squaredImage,
-                      cardImage.alt
+    <PageWrapper
+      pageData={pageContext}
+      seoTitle={seo.title}
+      seoDescription={seo.description}
+    >
+      <Hero title={hero[0].heroTitle} subtitle={hero[0].heroSubtitle} />
+      <SectionWrapper isBlog>
+        <SectionContainerGridThreeCols>
+          {allDatoCmsBlogPost.nodes.map(
+            ({
+              id,
+              meta,
+              minutesOfReading,
+              cardImage,
+              title,
+              subtitle,
+              author,
+              slug,
+            }) => (
+              <ArticleCard
+                key={id}
+                date={meta.publishedAt}
+                time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
+                cardImg={
+                  cardImage &&
+                  CardImgArtDir(
+                    cardImage.gatsbyImageData,
+                    cardImage.squaredImage,
+                    cardImage.alt
+                  )
+                }
+                title={title}
+                excerpt={subtitle}
+                authorImg={author && author.picture.gatsbyImageData}
+                authorAltImg={author && author.picture.alt}
+                authorName={author && author.name}
+                slug={slug}
+              />
+            )
+          )}
+        </SectionContainerGridThreeCols>
+        <ArchiveNav>
+          <ArchiveList>
+            {Array.from({ length: pagesNumber }, (_, index) => (
+              <li key={`page_number${index + 1}`}>
+                <ArchiveListLink
+                  as={index === archivePageNumber - 1 ? "span" : ""}
+                  to={(() => {
+                    if (
+                      locale === defaultLanguage &&
+                      index !== archivePageNumber - 1
                     )
-                  }
-                  title={title}
-                  excerpt={subtitle}
-                  authorImg={author && author.picture.gatsbyImageData}
-                  authorAltImg={author && author.picture.alt}
-                  authorName={author && author.name}
-                  slug={slug}
-                />
-              )
-            )}
-          </SectionContainerGridThreeCols>
-          <ArchiveNav>
-            <ArchiveList>
-              {Array.from({ length: pagesNumber }, (_, index) => (
-                <li key={`page_number${index + 1}`}>
-                  <ArchiveListLink
-                    as={index === archivePageNumber - 1 ? "span" : ""}
-                    to={(() => {
-                      if (
-                        locale === defaultLanguage &&
-                        index !== archivePageNumber - 1
-                      )
-                        return `/${defaultBlogPath}/${
-                          index === 0 ? "" : index + 1
-                        }`;
-                      if (
-                        locale !== defaultLanguage &&
-                        index !== archivePageNumber - 1
-                      )
-                        return `/${locale}/${defaultBlogPath}/${
-                          index === 0 ? "" : index + 1
-                        }`;
-                    })()}
-                  >
-                    {index + 1}
-                  </ArchiveListLink>
-                </li>
-              ))}
-            </ArchiveList>
-          </ArchiveNav>
-        </SectionWrapper>
-      </PageWrapper>
-    </LocaleProvider>
+                      return `/${defaultBlogPath}/${
+                        index === 0 ? "" : index + 1
+                      }`;
+                    if (
+                      locale !== defaultLanguage &&
+                      index !== archivePageNumber - 1
+                    )
+                      return `/${locale}/${defaultBlogPath}/${
+                        index === 0 ? "" : index + 1
+                      }`;
+                  })()}
+                >
+                  {index + 1}
+                </ArchiveListLink>
+              </li>
+            ))}
+          </ArchiveList>
+        </ArchiveNav>
+      </SectionWrapper>
+    </PageWrapper>
   );
 };
 

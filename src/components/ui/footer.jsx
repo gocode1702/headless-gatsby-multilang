@@ -36,7 +36,7 @@ const FooterContainer = styled.div`
 
 const Footer = () => {
   const data = useStaticQuery(graphql`
-    query FooterQuery {
+    query {
       allDatoCmsFooter {
         nodes {
           id: originalId

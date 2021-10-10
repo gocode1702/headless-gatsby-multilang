@@ -3,7 +3,7 @@ import { useStaticQuery, graphql } from "gatsby";
 const useSiteUrl = () => {
   const data = useStaticQuery(
     graphql`
-      query SiteMetaDataQuery {
+      query {
         datoCmsWebsiteSetting {
           siteUrl
         }

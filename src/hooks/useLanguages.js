@@ -3,7 +3,7 @@ import { graphql, useStaticQuery } from "gatsby";
 const useLanguages = () => {
   const data = useStaticQuery(
     graphql`
-      query DefaultLanguageQuery {
+      query {
         allDatoCmsSite {
           edges {
             node {

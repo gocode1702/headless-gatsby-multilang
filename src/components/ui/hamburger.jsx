@@ -54,7 +54,7 @@ const HamburgerButton = styled.button`
 
 const Hamburger = ({ isOpen, onClick }) => {
   const data = useStaticQuery(graphql`
-    query AriaLabelQuery {
+    query {
       allDatoCmsMenu {
         nodes {
           ariaLabelHamburger

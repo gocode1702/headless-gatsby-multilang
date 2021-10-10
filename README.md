@@ -40,25 +40,26 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 ## Table of contents
 
-  * [Content of the package](#content-of-the-package)
-  * [Purpose of the package](#purpose-of-the-package)
-  * [Why DatoCMS](#why-datocms)
-  * [Important notes](#important-notes)
-  * [Starter installation](#starter-installation)
-  * [Starter configuration](#starter-configuration)
-    * [1. Languages](#1-languages)
-    * [2. Fields relationship](#2-fields-relationship)
-    * [3. Pages generation](#3-pages-generation)
-    * [4. Language switcher](#4-language-switcher)
-    * [5. Editing the menu](#5-editing-the-menu)
-    * [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
-    * [7. Creating new templates](#7-creating-new-templates)
-    * [8. Blog features](#8-blog-features)
-    * [9. SEO](#9-seo)
-    * [10. PWA](#10-pwa)
-    * [11. Styling](#11-styling)
-    * [12. Issues](#12-issues)
-
+- [Content of the package](#content-of-the-package)
+- [Purpose of the package](#purpose-of-the-package)
+- [Why DatoCMS](#why-datocms)
+- [Important notes](#important-notes)
+- [Starter installation](#starter-installation)
+- [Starter configuration](#starter-configuration)
+- [1. Languages](#1-languages)
+- [2. Fields relationship](#2-fields-relationship)
+- [3. Pages generation](#3-pages-generation)
+- [4. Language switcher](#4-language-switcher)
+- [5. Editing the menu](#5-editing-the-menu)
+- [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
+- [7. Creating new templates](#7-creating-new-templates)
+- [8. Blog features](#8-blog-features)
+- [9. SEO](#9-seo)
+- [10. PWA](#10-pwa)
+- [11. Homepage Redirect](#11-homepage-redirect)
+- [12 - 404](#12---404)
+- [12. Styling](#12-styling)
+- 13. Issues](#13-issues)
 
 <br />
 
@@ -66,17 +67,17 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 The package has a very simple organization of the content:
 
-| /src                    | Content                                    |
-| ----------------------- | ------------------------------------------ |
-| /components/layout      | Layout and most common reusable components |
-| /components/ui          | Specific UI components                     |
-| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />`  and `<HomeRedirect />`|
-| /components/vectors     | JSX icons                                  |
-| /context                | Language provider                          |
-| /hooks                  | Useful useStaticQuery hooks                |
-| /static                 | settings.json file generated during build  |
-| /templates              | JSX templates                              |
-| /pages                  | 404 page                                   |
+| /src                    | Content                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| /components/layout      | Layout and most common reusable components                     |
+| /components/ui          | Specific UI components                                         |
+| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />` and `<HomeRedirect />` |
+| /components/vectors     | JSX icons                                                      |
+| /context                | Language provider                                              |
+| /hooks                  | Useful useStaticQuery hooks                                    |
+| /static                 | settings.json file generated during build                      |
+| /templates              | JSX templates                                                  |
+| /pages                  | 404 page                                                       |
 
 <br />
 
@@ -411,7 +412,6 @@ When creating an internal link you need to use the built-in `<Navigator />` comp
 | `archive`   | Boolean | Redirects to the archive page                                             |
 | `home`      | Boolean | Redirects to the homepage page                                            |
 | `to`        | String  | Accepts the slug queried from GraphQL, needed only for articles and pages |
-| `text`      | String  | Text displayed by your link                                               |
 | `className` | String  | Your own className                                                        |
 | `ariaLabel` | String  | Accessible link name                                                      |
 
@@ -434,8 +434,9 @@ import Navigator from "../components/langHelpers/navigator";
   className="classicButtonOutline"
   page
   to={data.guidePageLink.slug}
-  text={data.guidePageLink.title}
-/>
+>
+  {data.guidePageLink.title}
+</Navigator>
 
 ...
 
@@ -617,19 +618,18 @@ import { BackToArchiveButton } from "../components/buttons";
 
 ## 7. Creating new templates
 
-When creating new templates (e.g. single pages), always import and wrap your template around the `LocaleProvider` component. Always assign to the `pageData` prop the entire `pageContext` object:
+When creating new templates (e.g. single pages), always import and wrap your template around the `PageWrapper` component. Always pass to the `pageData` prop the entire `pageContext` object:
 
 ```js
 ...
 
-import LocaleProvider from "../context/langProvider";
+import PageWrapper from "../layout/pageWrapper";
 
 const BlogPostTemplate = ({ data, pageContext }) => {
 
   return (
-    <LocaleProvider pageData={pageContext}>
+    <PageWrapper pageData={pageContext} ...
 
- ...
 ```
 
 DatoCMS recently released [Structured Text Fields](https://www.datocms.com/blog/introducing-structured-text), in my opinion this is a big stride for content editors. Basically, they will be able to create pages and build the entire layout by using blocks which will be rendered by your components.
@@ -818,10 +818,11 @@ Each template is wrapped in a component named `<PageWrapper />` which accepts th
 If your related content model has a SEO field set, you should definitely set these props and query the related fields.
 
 ```jsx
-const HomePageTemplate = ({ data: { datoCmsHomePage }, }) => {
+const HomePageTemplate = ({ data: { datoCmsHomePage }, pageContext }) => {
 
   return (
     <PageWrapper
+      pageData={pageContext}
       seoTitle={datoCmsHomepage.seo.title}
       seoDescription={datoCmsHomepage.seo.description}
       seoImage={datoCmsHomepage.seo.image.url}
@@ -870,10 +871,33 @@ Favicon will be generated automatically, based on the above icon. PWA meta tags 
 
 If you wish to customize the manifest JSON schema, you can edit the `manifest` object variables in _gatsby-node.js_, keep in mind that icons are downloaded in different sizes by using different `imgixParams` and aliases in the dedicated query in _gatsby-node.js_.
 
+<br />
+
+## 11. Homepage Redirect
+
+When an user accesses the homepage ("/") for the very first time, the behavior is the following:
+
+- If among all its browser languages are present one or more languages also available in the website, the first one (picked at the top of the browser languages list) is set as the preferred
+  - If the preferred language is equal to the website's default language ("en"), no redirect takes place.
+  - If the preferred language is equal to one of the website secondary languages ("it", "es"), the user is redirected to the homepage for that specific language ("/it", "/es").
+- If no browser language match any website language, the website's default language is set as preferred and no redirect takes place.
+
+If you want to disable this behavior, simply unwrap the homepage template from `<HomeRedirect>` component.
 
 <br />
 
-## 11. Styling
+## 12 - 404
+
+When an user switches the language, the preferred language is always saved/overwritten in `localStorage` as well.
+In case the user will try to access a non-existent page in the future, content in preferred language will be displayed and the _back to home_ button will redirect to the homepage for its preferred language.
+
+If user never visited the website before and tries to access to a non-existent page, the behavior follows the same pattern of the homepage redirect.
+
+Content for 404 page can be localized on DatoCMS in the content model named "404 Page".
+
+<br />
+
+## 12. Styling
 
 By keeping the default starter configuration, CSS color variables and logo can be configured directly on DatoCMS without no further intervention on the core files. Data is queried in _gatsby-node.js_ and saved to _/src/static_ during build time. Then the JSON file containing the hex color codes is imported in _src/layout/globalStyles.js_ and values are assigned direct to CSS variables. The SVG logo url instead, is queried with useStaticQuery in _src/components/ui/header.jsx_.
 
@@ -898,6 +922,6 @@ If this approach doesn't fit your needs, you can safely remove the first block o
 
 ---
 
-### 12. Issues
+### 13. Issues
 
 Please do not hesitate to open an issue by attaching your build log/errors.

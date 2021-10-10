@@ -8,6 +8,8 @@ import useLanguages from "../../hooks/useLanguages";
 
 import useSiteUrl from "../../hooks/useSiteUrl";
 
+import { saveLocale } from "./utils";
+
 const HomeRedirect = ({ children }) => {
   const data = useStaticQuery(graphql`
     query {
@@ -38,17 +40,23 @@ const HomeRedirect = ({ children }) => {
 
     // If user accesses the homepage in default language ("/") for the first time ever via direct link and
     // no browser language matches any website language, do nothing
-    if (!preferredLanguages) return;
+    if (!preferredLanguages) {
+      saveLocale(siteUrl, defaultLanguage);
+      return;
+    }
 
-    // Instead, redirect to the first preferred browser language
-    // homepage that matches one of the available website languages
-    if (
-      preferredLanguages.length > 0 &&
-      pathname.length === 1 &&
-      !getSavedLocale &&
-      preferredLanguages[0] !== defaultLanguage
-    ) {
+    // If it is the very first time that the user visits the website
+    // but a browser language matched with the browser available languages
+    const commonPattern =
+      preferredLanguages.length > 0 && pathname.length === 1 && !getSavedLocale;
+
+    if (commonPattern && preferredLanguages[0] === defaultLanguage) {
+      // Save the preferred locale
+      saveLocale(siteUrl, preferredLanguages[0]);
+    } else if (commonPattern && preferredLanguages[0] !== defaultLanguage) {
+      // And redirect to the its homepage in case is different than the default language of the website
       navigate(`/${preferredLanguages[0]}`);
+      saveLocale(siteUrl, preferredLanguages[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

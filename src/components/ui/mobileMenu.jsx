@@ -72,7 +72,7 @@ const MobileNavDivider = styled.span`
 
 const MobileMenu = () => {
   const data = useStaticQuery(graphql`
-    query MobileMenuQuery {
+    query {
       allDatoCmsMenu {
         nodes {
           locale
