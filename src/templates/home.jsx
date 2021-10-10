@@ -42,8 +42,9 @@ const HomePageTemplate = ({ data, pageContext }) => {
                 className="classicButton classicButtonOutline"
                 page
                 to={data.guidePageLink.slug}
-                text={data.datoCmsWebsiteSetting.seeTheGuideButton}
-              />
+              >
+                {data.datoCmsWebsiteSetting.seeTheGuideButton}
+              </Navigator>
             }
             sectionChildren={
               <SectionContainerGridThreeCols>
@@ -59,11 +60,9 @@ const HomePageTemplate = ({ data, pageContext }) => {
           <SectionWrapper>
             <SectionTitleContainer hasButton>
               <SectionTitle>Featured posts</SectionTitle>
-              <Navigator
-                archive
-                className="classicButton classicButtonOutline"
-                text={data.datoCmsWebsiteSetting.seeAllButton}
-              />
+              <Navigator className="classicButton classicButtonOutline" archive>
+                {data.datoCmsWebsiteSetting.seeAllButton}
+              </Navigator>
             </SectionTitleContainer>
             <SectionContainerGridThreeCols>
               {data.allDatoCmsBlogPost.nodes.map(

@@ -14,6 +14,8 @@ const LangProvider = ({ children, pageData }) => {
     archivePageNumber,
   };
 
+  console.log(store);
+
   return <LangContext.Provider value={store}>{children}</LangContext.Provider>;
 };
 

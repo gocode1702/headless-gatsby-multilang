@@ -141,7 +141,7 @@ exports.createPages = async ({ graphql, actions }) => {
           skip: index * postsPerPage,
           pagesNumber,
           archivePageNumber: index + 1,
-          pageType: "isArchive",
+          pageType: index + 1 === 1 ? "isArchiveRoot" : "isPaginatedArchive",
         },
       });
     });
@@ -156,7 +156,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
     // Iterate trought all available locales, and increase
     // the counter when an article is generated,
-    // since the query results are sorted with the same field for each locale
+    // since the query results are sorted with with the same criteria for any locale
     // we can export a skipNext variable which we will use to skip all the previous posts.
 
     allDatoCmsBlogPost.edges
@@ -217,10 +217,7 @@ exports.createPages = async ({ graphql, actions }) => {
       component: HomePageTemplate,
       context: {
         locale,
-        pageType:
-          locale === defaultLanguage
-            ? "isHomeDefaultLang"
-            : "IsHomeSecondaryLang",
+        pageType: "isHome",
       },
     });
   });

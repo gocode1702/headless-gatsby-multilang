@@ -13,7 +13,6 @@ const Navigator = ({
   home,
   ariaLabel,
   className,
-  text,
   children,
   to,
   notFoundPage,
@@ -47,7 +46,6 @@ const Navigator = ({
           : "/"
       }
     >
-      {text}
       {children}
     </Link>
   );

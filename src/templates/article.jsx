@@ -128,11 +128,9 @@ const BlogPostTemplate = ({ data, pageContext }) => {
                     <>
                       <span>{data.datoCmsWebsiteSetting.previous}</span>
                       <h2>
-                        <Navigator
-                          article
-                          text={data.previous.nodes[0].title}
-                          to={data.previous.nodes[0].slug}
-                        />
+                        <Navigator article to={data.previous.nodes[0].slug}>
+                          {data.previous.nodes[0].title}
+                        </Navigator>
                       </h2>
                     </>
                   )}
@@ -146,11 +144,9 @@ const BlogPostTemplate = ({ data, pageContext }) => {
                     <>
                       <span>{data.datoCmsWebsiteSetting.next}</span>
                       <h2>
-                        <Navigator
-                          article
-                          text={data.next.nodes[0].title}
-                          to={data.next.nodes[0].slug}
-                        />
+                        <Navigator article to={data.next.nodes[0].slug}>
+                          {data.next.nodes[0].title}
+                        </Navigator>
                       </h2>
                     </>
                   )}

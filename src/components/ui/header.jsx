@@ -77,7 +77,7 @@ const VerticalDivider = styled.span`
 
 const Header = () => {
   const data = useStaticQuery(graphql`
-    query HeaderQuery {
+    query {
       allDatoCmsWebsiteSetting {
         edges {
           node {

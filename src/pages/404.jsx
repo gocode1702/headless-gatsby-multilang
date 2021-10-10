@@ -14,7 +14,7 @@ import Navigator from "../components/langHelpers/navigator";
 
 const NotFoundPage = () => {
   const data = useStaticQuery(graphql`
-    query NotFoundPageQuery {
+    query {
       allDatoCmsNotFoundPage {
         nodes {
           seo {

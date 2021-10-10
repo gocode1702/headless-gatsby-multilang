@@ -40,25 +40,24 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 ## Table of contents
 
-  * [Content of the package](#content-of-the-package)
-  * [Purpose of the package](#purpose-of-the-package)
-  * [Why DatoCMS](#why-datocms)
-  * [Important notes](#important-notes)
-  * [Starter installation](#starter-installation)
-  * [Starter configuration](#starter-configuration)
-    * [1. Languages](#1-languages)
-    * [2. Fields relationship](#2-fields-relationship)
-    * [3. Pages generation](#3-pages-generation)
-    * [4. Language switcher](#4-language-switcher)
-    * [5. Editing the menu](#5-editing-the-menu)
-    * [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
-    * [7. Creating new templates](#7-creating-new-templates)
-    * [8. Blog features](#8-blog-features)
-    * [9. SEO](#9-seo)
-    * [10. PWA](#10-pwa)
-    * [11. Styling](#11-styling)
-    * [12. Issues](#12-issues)
-
+- [Content of the package](#content-of-the-package)
+- [Purpose of the package](#purpose-of-the-package)
+- [Why DatoCMS](#why-datocms)
+- [Important notes](#important-notes)
+- [Starter installation](#starter-installation)
+- [Starter configuration](#starter-configuration)
+  - [1. Languages](#1-languages)
+  - [2. Fields relationship](#2-fields-relationship)
+  - [3. Pages generation](#3-pages-generation)
+  - [4. Language switcher](#4-language-switcher)
+  - [5. Editing the menu](#5-editing-the-menu)
+  - [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
+  - [7. Creating new templates](#7-creating-new-templates)
+  - [8. Blog features](#8-blog-features)
+  - [9. SEO](#9-seo)
+  - [10. PWA](#10-pwa)
+  - [11. Styling](#11-styling)
+  - [12. Issues](#12-issues)
 
 <br />
 
@@ -66,17 +65,17 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 The package has a very simple organization of the content:
 
-| /src                    | Content                                    |
-| ----------------------- | ------------------------------------------ |
-| /components/layout      | Layout and most common reusable components |
-| /components/ui          | Specific UI components                     |
-| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />`  and `<HomeRedirect />`|
-| /components/vectors     | JSX icons                                  |
-| /context                | Language provider                          |
-| /hooks                  | Useful useStaticQuery hooks                |
-| /static                 | settings.json file generated during build  |
-| /templates              | JSX templates                              |
-| /pages                  | 404 page                                   |
+| /src                    | Content                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| /components/layout      | Layout and most common reusable components                     |
+| /components/ui          | Specific UI components                                         |
+| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />` and `<HomeRedirect />` |
+| /components/vectors     | JSX icons                                                      |
+| /context                | Language provider                                              |
+| /hooks                  | Useful useStaticQuery hooks                                    |
+| /static                 | settings.json file generated during build                      |
+| /templates              | JSX templates                                                  |
+| /pages                  | 404 page                                                       |
 
 <br />
 
@@ -411,7 +410,6 @@ When creating an internal link you need to use the built-in `<Navigator />` comp
 | `archive`   | Boolean | Redirects to the archive page                                             |
 | `home`      | Boolean | Redirects to the homepage page                                            |
 | `to`        | String  | Accepts the slug queried from GraphQL, needed only for articles and pages |
-| `text`      | String  | Text displayed by your link                                               |
 | `className` | String  | Your own className                                                        |
 | `ariaLabel` | String  | Accessible link name                                                      |
 
@@ -434,8 +432,9 @@ import Navigator from "../components/langHelpers/navigator";
   className="classicButtonOutline"
   page
   to={data.guidePageLink.slug}
-  text={data.guidePageLink.title}
-/>
+>
+  {data.guidePageLink.title}
+</Navigator>
 
 ...
 
@@ -869,7 +868,6 @@ As soon as you will add a new language on Dato and localize its PWA settings, a 
 Favicon will be generated automatically, based on the above icon. PWA meta tags are already inserted manually to the `<Helmet />` component in _/src/components/pageWrapper.jsx_.
 
 If you wish to customize the manifest JSON schema, you can edit the `manifest` object variables in _gatsby-node.js_, keep in mind that icons are downloaded in different sizes by using different `imgixParams` and aliases in the dedicated query in _gatsby-node.js_.
-
 
 <br />
 
