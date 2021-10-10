@@ -59,7 +59,7 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 - [11. Homepage Redirect](#11-homepage-redirect)
 - [12 - 404](#12---404)
 - [12. Styling](#12-styling)
-- 13. Issues](#13-issues)
+- [13. Issues](#13-issues)
 
 <br />
 
@@ -891,7 +891,7 @@ If you want to disable this behavior, simply unwrap the homepage template from `
 When an user switches the language, the preferred language is always saved/overwritten in `localStorage` as well.
 In case the user will try to access a non-existent page in the future, content in preferred language will be displayed and the _back to home_ button will redirect to the homepage for its preferred language.
 
-If user never visited the website before and tries to access to a non-existent page, the behavior follows the same pattern of the homepage redirect.
+If user never visited the website before and tries to access to a non-existent page, the behavior follows the same logic of the homepage redirect.
 
 Content for 404 page can be localized on DatoCMS in the content model named "404 Page".
 
