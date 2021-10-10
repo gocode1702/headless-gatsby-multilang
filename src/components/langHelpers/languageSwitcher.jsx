@@ -10,6 +10,8 @@ import useLanguages from "../../hooks/useLanguages";
 
 import useSiteUrl from "../../hooks/useSiteUrl";
 
+import { saveLocale } from "./utils";
+
 // Scoped styles
 
 const LangNavList = styled.ul`
@@ -96,9 +98,6 @@ const LanguageSwitcher = () => {
     archivePageNumber,
   } = useContext(LangContext);
 
-  const saveLocale = (locale) =>
-    localStorage.setItem(`${siteUrl.slice(8)}_preferred_lang`, locale);
-
   // Helpers
 
   const isHome = pageType === "isHome";
@@ -121,7 +120,7 @@ const LanguageSwitcher = () => {
                 className={locale === currentLanguage && "activeClassLangNav"}
                 as={locale === currentLanguage && "span"}
                 to={locale === defaultLanguage ? "/" : `/${locale}`}
-                onClick={() => saveLocale(locale)}
+                onClick={() => saveLocale(siteUrl, locale)}
               >
                 {locale}
               </LanguageSwitcherLink>
@@ -140,7 +139,7 @@ const LanguageSwitcher = () => {
                     ? `/${defaultBlogPath}`
                     : `/${locale}/${defaultBlogPath}`
                 }
-                onClick={() => saveLocale(locale)}
+                onClick={() => saveLocale(siteUrl, locale)}
               >
                 {locale}
               </LanguageSwitcherLink>
@@ -159,7 +158,7 @@ const LanguageSwitcher = () => {
                     ? `/${defaultBlogPath}/${archivePageNumber}`
                     : `/${locale}/${defaultBlogPath}/${archivePageNumber}`
                 }
-                onClick={() => saveLocale(locale)}
+                onClick={() => saveLocale(siteUrl, locale)}
               >
                 {locale}
               </LanguageSwitcherLink>
@@ -225,7 +224,7 @@ const LanguageSwitcher = () => {
                                     : `/${locale}/${matchSlug}`
                                   : "/"
                               }
-                              onClick={() => saveLocale(locale)}
+                              onClick={() => saveLocale(siteUrl, locale)}
                             >
                               {locale}
                             </LanguageSwitcherLink>

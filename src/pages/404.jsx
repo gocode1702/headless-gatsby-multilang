@@ -11,10 +11,14 @@ import PageWrapper from "../components/layout/pageWrapper";
 import Hero from "../components/ui/hero";
 
 import Navigator from "../components/langHelpers/navigator";
+import { saveLocale } from "../components/langHelpers/utils";
 
 const NotFoundPage = () => {
   const data = useStaticQuery(graphql`
     query {
+      datoCmsSite {
+        locales
+      }
       allDatoCmsNotFoundPage {
         nodes {
           seo {
@@ -40,6 +44,14 @@ const NotFoundPage = () => {
   const { siteUrl } = useSiteUrl();
 
   if (!isSSR) {
+    const websiteLangCodes = data.datoCmsSite.locales;
+    const browserLangCodes = navigator.languages.map((language) =>
+      language.slice(0, 2)
+    );
+    const preferredLanguages = browserLangCodes.filter((websiteLang) =>
+      websiteLangCodes.includes(websiteLang)
+    );
+
     const getSavedLocale = localStorage.getItem(
       `${siteUrl.slice(8)}_preferred_lang`
     );
@@ -48,26 +60,68 @@ const NotFoundPage = () => {
       ({ locale }) => locale === getSavedLocale
     )[0];
 
+    const availableLanguageData = data.allDatoCmsNotFoundPage.nodes.filter(
+      ({ locale }) => locale === preferredLanguages[0]
+    )[0];
+
+    const defaultLangProps = {
+      pageWrapper: {
+        seoTitle: seo.title,
+        seoDescription: seo.description,
+        notFoundPageLocale: defaultLanguage,
+        notFoundPageManifest: "/manifest.webmanifest",
+      },
+      hero: {
+        title,
+        subtitle,
+      },
+      navigator: {
+        children: backToHomeText,
+        to: "/",
+      },
+    };
+
     const getProps = () => {
       // If user never visited the website and never set the language preference,
       // Or he set the preference for the default language, display data in default language
-      if (!getSavedLocale || getSavedLocale === defaultLanguage)
+
+      if (!getSavedLocale && !preferredLanguages)
+        return { ...defaultLangProps };
+
+      if (
+        !getSavedLocale &&
+        preferredLanguages.length > 0 &&
+        preferredLanguages[0] === defaultLanguage
+      ) {
+        saveLocale(siteUrl, defaultLanguage);
+        return { ...defaultLangProps };
+      }
+
+      if (
+        !getSavedLocale &&
+        preferredLanguages.length > 0 &&
+        preferredLanguages[0] !== defaultLanguage
+      ) {
+        saveLocale(siteUrl, preferredLanguages[0]);
         return {
           pageWrapper: {
-            seoTitle: seo.title,
-            seoDescription: seo.description,
-            notFoundPageLocale: defaultLanguage,
-            notFoundPageManifest: "/manifest.webmanifest",
+            seoTitle: availableLanguageData.seo.title,
+            seoDescription: availableLanguageData.seo.description,
+            notFoundPageLocale: preferredLanguages[0],
+            notFoundPageManifest: `/manifest_${preferredLanguages[0]}.webmanifest`,
           },
           hero: {
-            title,
-            subtitle,
+            title: availableLanguageData.title,
+            subtitle: availableLanguageData.subtitle,
           },
           navigator: {
-            children: backToHomeText,
-            to: "/",
+            children: availableLanguageData.backToHomeText,
+            notFoundPage: `/${preferredLanguages[0]}`,
           },
         };
+      }
+
+      if (getSavedLocale === defaultLanguage) return { ...defaultLangProps };
 
       // Else display corresponding data for saved language
       return {
