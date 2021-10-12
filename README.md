@@ -46,20 +46,20 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 - [Important notes](#important-notes)
 - [Starter installation](#starter-installation)
 - [Starter configuration](#starter-configuration)
-- [1. Languages](#1-languages)
-- [2. Fields relationship](#2-fields-relationship)
-- [3. Pages generation](#3-pages-generation)
-- [4. Language switcher](#4-language-switcher)
-- [5. Editing the menu](#5-editing-the-menu)
-- [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
-- [7. Creating new templates](#7-creating-new-templates)
-- [8. Blog features](#8-blog-features)
-- [9. SEO](#9-seo)
-- [10. PWA](#10-pwa)
-- [11. Homepage Redirect](#11-homepage-redirect)
-- [12 - 404](#12---404)
-- [12. Styling](#12-styling)
-- [13. Issues](#13-issues)
+   - [1. Languages](#1-languages)
+   - [2. Fields relationship](#2-fields-relationship)
+   - [3. Pages generation](#3-pages-generation)
+   - [4. Language switcher](#4-language-switcher)
+   - [5. Editing the menu](#5-editing-the-menu)
+   - [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
+   - [7. Creating new templates](#7-creating-new-templates)
+   - [8. Blog features](#8-blog-features)
+   - [9. SEO](#9-seo)
+   - [10. PWA](#10-pwa)
+   - [11. Homepage Redirect](#11-homepage-redirect)
+   - [12 - 404](#12---404)
+   - [12. Styling](#12-styling)
+   - [13. Issues](#13-issues)
 
 <br />
 
@@ -83,7 +83,7 @@ The package has a very simple organization of the content:
 
 ## Purpose of the package
 
-The whole purpose of this starter is to provide a full JAMstack multilanguage boilerplate in order to allow your content editors to add/remove languages, style the website, manage SEO and PWA settings, edit the menu, create new posts, translate and share them in a super-friendly decoupled environment.
+The whole purpose of this starter is to provide a full JAMstack multilanguage boilerplate allowing your content editors to add/remove languages, style the website, manage SEO and PWA settings, edit the menu, create new posts, translate and share them in a super-friendly decoupled environment.
 
 After publishing any change, a build on Gatsby Cloud will automatically be executed and the website will be updated with new settings and content.
 By enforcing fields validation and presentation, you can safely give your content editors more powers and let them manage more specific aspects of the website like PWA, global SEO and CSS variables.
