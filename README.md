@@ -423,8 +423,6 @@ When creating an internal link you need to use the built-in `<Navigator />` comp
 
 A typical usage would look like:
 
-![Record ID](https://i.ibb.co/0G82Stp/Schermata-2021-08-02-alle-10-25-14.png)
-
 ```jsx
 import Navigator from "../components/langHelpers/navigator";
 
@@ -444,7 +442,7 @@ export const query = graphql`
   query HomePageTemplate($locale: String!) {
     guidePageLink: datoCmsOtherPage(
       locale: { eq: $locale }
-      originalId: { eq: "50358874" }
+      reference: { eq: "guide" }
     ) {
       slug
       title
@@ -453,7 +451,7 @@ export const query = graphql`
 `;
 ```
 
-**Caveat:** You will have to manually filter the ID of the corresponding post/page. It can be done within 10 seconds but use it only if your content editors are not going to control this link. If the slug changes in the future, the link will always work as long as the record is not removed.
+**Caveat:** You will have to manually enter the _reference_ field value of the corresponding post/page. It can be done within 10 seconds but use it only if your content editors are not going to control this slug.
 
 ---
 
