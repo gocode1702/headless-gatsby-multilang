@@ -133,7 +133,7 @@ export const query = graphql`
     }
     guidePageLink: datoCmsOtherPage(
       locale: { eq: $locale }
-      originalId: { eq: "51376108" }
+      reference: { eq: "guide" }
     ) {
       slug
     }
