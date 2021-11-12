@@ -1,30 +1,18 @@
 import React from "react";
-
 import { graphql } from "gatsby";
-
 import { StructuredText } from "react-datocms";
-
 import { isCode } from "datocms-structured-text-utils";
-
 import { renderRule } from "datocms-structured-text-to-plain-text";
-
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-
 import PageWrapper from "../components/layout/pageWrapper";
-
 import ArticleHeader, { BodyImg } from "../components/ui/articleHeader";
-
 import {
   ArticleBody,
   LanguageContainer,
 } from "../components/layout/paragraphStyles";
-
 import PrevNextNav from "../components/ui/articlePrevNext";
-
 import { SectionWrapper } from "../components/layout/sectionStyles";
-
 import Navigator from "../components/langHelpers/navigator";
 
 const BlogPostTemplate = ({ data, pageContext }) => {

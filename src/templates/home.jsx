@@ -1,26 +1,17 @@
 import React from "react";
-
 import { graphql } from "gatsby";
-
 import PageWrapper from "../components/layout/pageWrapper";
-
 import Navigator from "../components/langHelpers/navigator";
-
 import HomeRedirect from "../components/langHelpers/homeRedirect";
-
 import Hero from "../components/ui/hero";
-
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
   SectionTitleContainer,
   TextBox,
 } from "../components/layout/sectionStyles";
-
 import { HeadingSmall, SectionTitle } from "../components/layout/headingStyles";
-
 import { Paragraph } from "../components/layout/paragraphStyles";
-
 import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
 
 const HomePageTemplate = ({ data, pageContext }) => {
