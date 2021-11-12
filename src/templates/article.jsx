@@ -5,15 +5,15 @@ import { isCode } from "datocms-structured-text-utils";
 import { renderRule } from "datocms-structured-text-to-plain-text";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import PageWrapper from "../components/layout/pageWrapper";
-import ArticleHeader, { BodyImg } from "../components/ui/articleHeader";
+import PageWrapper from "../components/layout/PageWrapper";
+import ArticleHeader, { BodyImg } from "../components/ui/ArticleHeader";
 import {
   ArticleBody,
   LanguageContainer,
 } from "../components/layout/paragraphStyles";
-import PrevNextNav from "../components/ui/articlePrevNext";
+import PrevNextNav from "../components/ui/ArticlePrevNext";
 import { SectionWrapper } from "../components/layout/sectionStyles";
-import Navigator from "../components/langHelpers/navigator";
+import Navigator from "../components/langHelpers/Navigator";
 
 const BlogPostTemplate = ({ data, pageContext }) => {
   const { id, structuredBody, seo, title, subtitle, author, coverImage, meta } =

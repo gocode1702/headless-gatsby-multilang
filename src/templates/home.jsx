@@ -1,9 +1,9 @@
 import React from "react";
 import { graphql } from "gatsby";
-import PageWrapper from "../components/layout/pageWrapper";
-import Navigator from "../components/langHelpers/navigator";
-import HomeRedirect from "../components/langHelpers/homeRedirect";
-import Hero from "../components/ui/hero";
+import PageWrapper from "../components/layout/PageWrapper";
+import Navigator from "../components/langHelpers/Navigator";
+import HomeRedirect from "../components/langHelpers/HomeRedirect";
+import Hero from "../components/layout/Hero";
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
@@ -12,10 +12,10 @@ import {
 } from "../components/layout/sectionStyles";
 import { HeadingSmall, SectionTitle } from "../components/layout/headingStyles";
 import { Paragraph } from "../components/layout/paragraphStyles";
-import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
+import ArticleCard, { CardImgArtDir } from "../components/ui/ArticleCard";
 
 const HomePageTemplate = ({ data, pageContext }) => {
-  const { seo, hero, features } = data.datoCmsHomepage;
+  const { seo, hero, features, featuredPostsTitle } = data.datoCmsHomepage;
 
   return (
     <HomeRedirect>
@@ -51,7 +51,7 @@ const HomePageTemplate = ({ data, pageContext }) => {
         />
         <SectionWrapper>
           <SectionTitleContainer hasButton>
-            <SectionTitle>Featured posts</SectionTitle>
+            <SectionTitle>{featuredPostsTitle}</SectionTitle>
             <Navigator className="classicButton classicButtonOutline" archive>
               {data.datoCmsWebsiteSetting.seeAllButton}
             </Navigator>
@@ -121,6 +121,7 @@ export const query = graphql`
         title
         description
       }
+      featuredPostsTitle
     }
     guidePageLink: datoCmsOtherPage(
       locale: { eq: $locale }

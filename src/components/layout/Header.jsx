@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { graphql, useStaticQuery, Link } from "gatsby";
 import styled from "styled-components";
-import { LangContext } from "../../context/langProvider";
-import LanguageSwitcher from "../langHelpers/languageSwitcher";
+import { LangContext } from "../../context/LangProvider";
+import LanguageSwitcher from "../langHelpers/LanguageSwitcher";
 import useLanguages from "../../hooks/useLanguages";
-import Navigator from "../langHelpers/navigator";
-import MobileMenu from "./mobileMenu";
-import { Divider } from "../layout/sectionStyles";
+import Navigator from "../langHelpers/Navigator";
+import MobileMenu from "./MobileMenu";
+import { Divider } from "./sectionStyles";
 
 // Scoped styles
 

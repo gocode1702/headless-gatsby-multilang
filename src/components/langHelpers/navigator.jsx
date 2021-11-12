@@ -1,9 +1,6 @@
 import React, { useContext } from "react";
-
 import { Link } from "gatsby";
-
-import { LangContext } from "../../context/langProvider";
-
+import { LangContext } from "../../context/LangProvider";
 import useLanguages from "../../hooks/useLanguages";
 
 const Navigator = ({
@@ -18,7 +15,6 @@ const Navigator = ({
   notFoundPage,
 }) => {
   const { currentLanguage } = useContext(LangContext);
-
   const { defaultLanguage, defaultBlogPath } = useLanguages();
   return (
     <Link

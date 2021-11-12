@@ -115,7 +115,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const postsPerPage = blogSettings.postsPerPage; // eslint-disable-line prefer-destructuring // eslint-disable-line prefer-destructuring
   const pagesNumber = Math.ceil(allBlogPostsPerLocale / postsPerPage);
 
-  const ArchiveTemplate = path.resolve("src/templates/archive.jsx");
+  const ArchiveTemplate = path.resolve("src/templates/Archive.jsx");
 
   allLanguages.forEach(({ node: { locale } }) => {
     Array.from({ length: pagesNumber }).forEach((_, index) => {
@@ -149,7 +149,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Articles Generation
 
-  const ArticleTemplate = path.resolve("src/templates/article.jsx");
+  const ArticleTemplate = path.resolve("src/templates/Article.jsx");
 
   allLanguages.forEach(({ node: { locale: nodeLocale } }) => {
     let pageCounter = 0;
@@ -209,7 +209,7 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `);
 
-  const HomePageTemplate = path.resolve("src/templates/home.jsx");
+  const HomePageTemplate = path.resolve("src/templates/Home.jsx");
 
   allDatoCmsHomepage.nodes.forEach(({ locale }) => {
     createPage({
@@ -239,7 +239,7 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `);
 
-  const OtherPageTemplate = path.resolve("src/templates/otherPage.jsx");
+  const OtherPageTemplate = path.resolve("src/templates/OtherPage.jsx");
 
   allDatoCmsOtherPage.nodes.forEach(({ locale, slug, id, reference }) => {
     createPage({
@@ -315,7 +315,7 @@ exports.createPages = async ({ graphql, actions }) => {
       response.pipe(icon);
     });
   } catch (err) {
-    console.log(err);
+    throw new Error(err.message);
   }
 
   const manifest = {

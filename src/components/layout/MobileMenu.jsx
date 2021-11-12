@@ -1,14 +1,9 @@
 import React, { useState, useContext, Fragment } from "react";
-
 import { graphql, useStaticQuery, Link } from "gatsby";
-
 import styled, { css } from "styled-components";
-
-import Hamburger from "./hamburger";
-
+import Hamburger from "../ui/Hamburger";
+import { LangContext } from "../../context/LangProvider";
 import useLanguages from "../../hooks/useLanguages";
-
-import { LangContext } from "../../context/langProvider";
 
 // Scoped styles
 

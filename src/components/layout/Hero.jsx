@@ -1,10 +1,7 @@
 import React from "react";
-
 import styled from "styled-components";
-
-import { HeroSubtitle, HeroTitle, HeroAlt } from "../layout/headingStyles";
-
-import { Divider } from "../layout/sectionStyles";
+import { HeroSubtitle, HeroTitle, HeroAlt } from "./headingStyles";
+import { Divider } from "./sectionStyles";
 
 const HeroWrapper = styled.section`
   display: flex;

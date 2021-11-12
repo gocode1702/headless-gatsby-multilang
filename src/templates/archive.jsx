@@ -1,11 +1,7 @@
 import React from "react";
-
 import { graphql } from "gatsby";
-
-import PageWrapper from "../components/layout/pageWrapper";
-
-import Hero from "../components/ui/hero";
-
+import PageWrapper from "../components/layout/PageWrapper";
+import Hero from "../components/layout/Hero";
 import useLanguages from "../hooks/useLanguages";
 
 import {
@@ -13,7 +9,7 @@ import {
   SectionWrapper,
 } from "../components/layout/sectionStyles";
 
-import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
+import ArticleCard, { CardImgArtDir } from "../components/ui/ArticleCard";
 
 import {
   ArchiveNav,

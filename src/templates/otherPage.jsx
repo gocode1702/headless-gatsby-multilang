@@ -1,15 +1,9 @@
 import React from "react";
-
 import { graphql } from "gatsby";
-
 import { StructuredText } from "react-datocms";
-
-import Navigator from "../components/langHelpers/navigator";
-
-import PageWrapper from "../components/layout/pageWrapper";
-
-import Hero from "../components/ui/hero";
-
+import Navigator from "../components/langHelpers/Navigator";
+import PageWrapper from "../components/layout/PageWrapper";
+import Hero from "../components/layout/Hero";
 import {
   SectionContainerGridThreeCols,
   SectionContainerFlexTwoCols,
@@ -18,12 +12,10 @@ import {
   ColumnFlexTwoCols,
   TextBox,
 } from "../components/layout/sectionStyles";
-
 import {
   HeadingMedium,
   HeadingSmall,
 } from "../components/layout/headingStyles";
-
 import { Paragraph } from "../components/layout/paragraphStyles";
 
 const OtherPageTemplate = ({ data, pageContext }) => {
