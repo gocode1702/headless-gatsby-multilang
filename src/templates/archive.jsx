@@ -9,7 +9,7 @@ import {
   SectionWrapper,
 } from "../components/layout/sectionStyles";
 
-import ArticleCard, { CardImgArtDir } from "../components/ui/ArticleCard";
+import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
 
 import {
   ArchiveNav,

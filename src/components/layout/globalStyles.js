@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-
 import Settings from "../../static/settings.json";
 
 const {

@@ -1,9 +1,9 @@
 import React from "react";
 import { graphql } from "gatsby";
 import { StructuredText } from "react-datocms";
-import Navigator from "../components/langHelpers/Navigator";
-import PageWrapper from "../components/layout/PageWrapper";
-import Hero from "../components/layout/Hero";
+import Navigator from "../components/langHelpers/navigator";
+import PageWrapper from "../components/layout/pageWrapper";
+import Hero from "../components/layout/hero";
 import {
   SectionContainerGridThreeCols,
   SectionContainerFlexTwoCols,
@@ -18,15 +18,25 @@ import {
 } from "../components/layout/headingStyles";
 import { Paragraph } from "../components/layout/paragraphStyles";
 
-const OtherPageTemplate = ({ data, pageContext }) => {
-  const { seo, structuredBody } = data.datoCmsOtherPage;
-
+const OtherPageTemplate = ({
+  data: {
+    datoCmsOtherPage: {
+      seo: {
+        seoTitle,
+        seoDescription,
+        image: { seoImageUrl },
+      },
+      structuredBody,
+    },
+  },
+  pageContext,
+}) => {
   return (
     <PageWrapper
       pageData={pageContext}
-      seoTitle={seo.title}
-      seoDescription={seo.description}
-      seoImage={seo.image.url}
+      seoTitle={seoTitle}
+      seoDescription={seoDescription}
+      seoImage={seoImageUrl}
     >
       {structuredBody.value && (
         <StructuredText
@@ -72,7 +82,6 @@ const OtherPageTemplate = ({ data, pageContext }) => {
                             <StructuredText
                               data={text}
                               renderLinkToRecord={({
-                                record,
                                 children,
                                 transformedMeta,
                               }) => {
@@ -185,10 +194,10 @@ export const query = graphql`
   query OtherPageQuery($locale: String!, $id: String!) {
     datoCmsOtherPage(locale: { eq: $locale }, originalId: { eq: $id }) {
       seo {
-        title
-        description
+        seoTitle: title
+        seoDescription: description
         image {
-          url
+          seoImageUrl: url
         }
       }
       structuredBody {
