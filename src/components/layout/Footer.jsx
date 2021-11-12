@@ -2,7 +2,7 @@ import React, { Fragment, useContext } from "react";
 import { graphql, useStaticQuery } from "gatsby";
 import styled from "styled-components";
 import { StructuredText } from "react-datocms";
-import { LangContext } from "../../context/LangProvider";
+import { LangContext } from "../../context/langProvider";
 import { Paragraph } from "./paragraphStyles";
 import { SectionWrapper, Divider } from "./sectionStyles";
 

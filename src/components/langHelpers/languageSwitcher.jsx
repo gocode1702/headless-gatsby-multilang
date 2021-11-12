@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { graphql, useStaticQuery, Link } from "gatsby";
 import styled from "styled-components";
-import { LangContext } from "../../context/LangProvider";
+import { LangContext } from "../../context/langProvider";
 import useLanguages from "../../hooks/useLanguages";
 import useSiteUrl from "../../hooks/useSiteUrl";
 import { saveLocale } from "./utils";

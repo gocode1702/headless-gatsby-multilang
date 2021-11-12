@@ -1,7 +1,7 @@
 import React from "react";
 import { graphql } from "gatsby";
-import PageWrapper from "../components/layout/PageWrapper";
-import Hero from "../components/layout/Hero";
+import PageWrapper from "../components/layout/pageWrapper";
+import Hero from "../components/layout/hero";
 import useLanguages from "../hooks/useLanguages";
 
 import {

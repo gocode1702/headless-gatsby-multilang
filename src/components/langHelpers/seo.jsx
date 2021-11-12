@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { graphql, useStaticQuery } from "gatsby";
 import { Helmet } from "react-helmet";
-import { LangContext } from "../../context/LangProvider";
+import { LangContext } from "../../context/langProvider";
 import { useLocation } from "@reach/router";
 import useLanguages from "../../hooks/useLanguages";
 import useSiteUrl from "../../hooks/useSiteUrl";

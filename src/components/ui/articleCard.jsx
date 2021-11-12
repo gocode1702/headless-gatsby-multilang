@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { GatsbyImage, getImage, withArtDirection } from "gatsby-plugin-image";
-import Navigator from "../langHelpers/Navigator";
+import Navigator from "../langHelpers/navigator";
 import { HeadingSmall } from "../layout/headingStyles";
 
 // Scoped styles
