@@ -209,7 +209,7 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `);
 
-  const HomePageTemplate = path.resolve("src/templates/home.jsx");
+  const HomePageTemplate = path.resolve("src/templates/index.jsx");
 
   allDatoCmsHomepage.nodes.forEach(({ locale }) => {
     createPage({
@@ -315,7 +315,7 @@ exports.createPages = async ({ graphql, actions }) => {
       response.pipe(icon);
     });
   } catch (err) {
-    console.log(err);
+    throw new Error(err.message);
   }
 
   const manifest = {

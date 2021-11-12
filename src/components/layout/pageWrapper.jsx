@@ -1,14 +1,9 @@
 import React from "react";
-
-import Seo from "../langHelpers/seo";
-
+import Seo from "../langHelpers/Seo";
 import GlobalStyles from "./globalStyles";
-
-import Header from "../ui/header";
-
-import Footer from "../ui/footer";
-
-import LangProvider from "../../context/langProvider";
+import Header from "./Header";
+import Footer from "./Footer";
+import LangProvider from "../../context/LangProvider";
 
 const PageWrapper = ({
   pageData,

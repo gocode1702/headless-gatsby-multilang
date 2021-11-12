@@ -1,16 +1,10 @@
 import React, { Fragment, useContext } from "react";
-
 import { graphql, useStaticQuery } from "gatsby";
-
 import styled from "styled-components";
-
 import { StructuredText } from "react-datocms";
-
-import { LangContext } from "../../context/langProvider";
-
-import { Paragraph } from "../layout/paragraphStyles";
-
-import { SectionWrapper, Divider } from "../layout/sectionStyles";
+import { LangContext } from "../../context/LangProvider";
+import { Paragraph } from "./paragraphStyles";
+import { SectionWrapper, Divider } from "./sectionStyles";
 
 const FooterContainer = styled.div`
   display: flex;

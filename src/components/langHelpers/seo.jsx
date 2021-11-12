@@ -1,15 +1,9 @@
 import React, { useContext } from "react";
-
 import { graphql, useStaticQuery } from "gatsby";
-
 import { Helmet } from "react-helmet";
-
-import { LangContext } from "../../context/langProvider";
-
+import { LangContext } from "../../context/LangProvider";
 import { useLocation } from "@reach/router";
-
 import useLanguages from "../../hooks/useLanguages";
-
 import useSiteUrl from "../../hooks/useSiteUrl";
 
 const Seo = ({
@@ -65,8 +59,6 @@ const Seo = ({
 
   const hasDefaultSchema =
     (seoTitle && isHome) || (seoTitle && isPage) || (seoTitle && isArchiveRoot);
-
-  console.log(notFoundPage);
 
   return (
     <Helmet>
