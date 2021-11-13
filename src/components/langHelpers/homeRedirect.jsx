@@ -1,13 +1,8 @@
 import React, { useEffect } from "react";
-
 import { graphql, useStaticQuery, navigate } from "gatsby";
-
 import { useLocation } from "@reach/router";
-
 import useLanguages from "../../hooks/useLanguages";
-
 import useSiteUrl from "../../hooks/useSiteUrl";
-
 import { saveLocale } from "./utils";
 
 const HomeRedirect = ({ children }) => {

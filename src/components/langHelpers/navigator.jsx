@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "gatsby";
-import { LangContext } from "../../context/LangProvider";
+import { LangContext } from "../../context/langProvider";
 import useLanguages from "../../hooks/useLanguages";
 
 const Navigator = ({

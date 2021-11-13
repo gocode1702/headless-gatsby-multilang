@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import { graphql, useStaticQuery } from "gatsby";
-import { LangContext } from "../../context/LangProvider";
+import { LangContext } from "../../context/langProvider";
 
 // Scoped styles
 

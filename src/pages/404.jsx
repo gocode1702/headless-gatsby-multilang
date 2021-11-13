@@ -2,9 +2,9 @@ import React from "react";
 import { graphql, useStaticQuery } from "gatsby";
 import useSiteUrl from "../hooks/useSiteUrl";
 import useLanguages from "../hooks/useLanguages";
-import PageWrapper from "../components/layout/PageWrapper";
-import Hero from "../components/layout/Hero";
-import Navigator from "../components/langHelpers/Navigator";
+import PageWrapper from "../components/layout/pageWrapper";
+import Hero from "../components/layout/hero";
+import Navigator from "../components/langHelpers/navigator";
 import { saveLocale } from "../components/langHelpers/utils";
 
 const NotFoundPage = () => {
