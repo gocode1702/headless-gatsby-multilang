@@ -1,6 +1,6 @@
 ![Headless Multilingual Starter for Gatsby with DatoCMS](https://i.ibb.co/0XSy2gf/splashscreen-2.png)
 
-# Headless Multilingual Starter for Gatsby with DatoCMS
+# Headless Multilingual Starter for Gatsby v4 with DatoCMS
 
 A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
