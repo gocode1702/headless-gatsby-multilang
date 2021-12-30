@@ -1,4 +1,4 @@
-import { graphql, useStaticQuery } from "gatsby";
+import { graphql, useStaticQuery } from 'gatsby';
 
 const useLanguages = () => {
   const data = useStaticQuery(
@@ -17,9 +17,22 @@ const useLanguages = () => {
       }
     `
   );
+
+  const {
+    allDatoCmsSite: {
+      edges: [
+        {
+          node: { locale: defaultLanguage },
+        },
+      ],
+    },
+
+    datoCmsWebsiteSetting: { blogPath },
+  } = data;
+
   return {
-    defaultLanguage: data.allDatoCmsSite.edges[0].node.locale,
-    defaultBlogPath: data.datoCmsWebsiteSetting.blogPath,
+    defaultLanguage,
+    blogPath,
   };
 };
 

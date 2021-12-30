@@ -1,4 +1,4 @@
-import { useStaticQuery, graphql } from "gatsby";
+import { useStaticQuery, graphql } from 'gatsby';
 
 const useSiteUrl = () => {
   const data = useStaticQuery(
@@ -10,7 +10,10 @@ const useSiteUrl = () => {
       }
     `
   );
-  return data.datoCmsWebsiteSetting;
+
+  const { datoCmsWebsiteSetting } = data;
+
+  return datoCmsWebsiteSetting;
 };
 
 export default useSiteUrl;
