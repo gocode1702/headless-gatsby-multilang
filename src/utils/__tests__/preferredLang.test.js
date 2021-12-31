@@ -1,4 +1,4 @@
-import preferredLang from '../src/utils/preferredLang';
+import preferredLang from '../preferredLang';
 
 test('Returns first matching app lang code according to browser languages priority', () => {
   expect(preferredLang(['de-CH', 'en'], ['fr', 'en', 'de'])).toBe('de');

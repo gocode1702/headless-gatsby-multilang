@@ -13,14 +13,9 @@ import {
 } from '../../utils/misc';
 import is404 from '../../utils/is404';
 
-const Redirect = ({ children }) => {
+const Redirect = () => {
   const [mounted, setMounted] = useState(true);
-  return (
-    <>
-      {mounted && <Trigger setMounted={setMounted} />}
-      {children}
-    </>
-  );
+  return mounted && <Trigger setMounted={setMounted} />;
 };
 
 export default Redirect;

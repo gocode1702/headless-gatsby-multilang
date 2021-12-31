@@ -1,5 +1,3 @@
-import fetch from 'cross-fetch';
-
 const is404 = async (href) => {
   const request = await fetch(href, {
     hethod: 'HEAD',
