@@ -1,3 +1,5 @@
+const isDev = process.env.NODE_ENV === 'development';
+
 module.exports = {
   siteMetadata: {
     siteUrl: 'https://headlessmultilingual.gatsbyjs.io',
@@ -15,21 +17,22 @@ module.exports = {
     'gatsby-plugin-sitemap',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
-    'gatsby-plugin-styled-components',
+    {
+      resolve: 'gatsby-plugin-styled-components',
+      options: {
+        fileName: isDev,
+        displayName: isDev,
+        pure: true,
+      },
+    },
     'gatsby-plugin-image',
     'gatsby-plugin-react-helmet',
     {
       resolve: 'gatsby-source-datocms',
       options: {
         apiToken: '87cdc55b15aa843368e8df1531e7b4',
-        /**
-         * Example of how locale fallbacks should be set,
-         * refer to README.md for more infos
-         */
         localeFallbacks: {
-          fr: 'en',
-          it: 'SV-fi',
-          'lt-LT': 'en',
+          'ar-AE': 'en',
         },
       },
     },
