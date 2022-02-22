@@ -15,7 +15,7 @@ const CategoryTemplate = ({
       hero: [{ heroTitle, heroSubtitle, heroAlt }],
       seo,
     },
-    allDatoCmsBlogPost: { postNodes },
+    allCategoryPosts: { postNodes },
   },
   pageContext,
 }) => (
@@ -75,6 +75,7 @@ export default CategoryTemplate;
 export const query = graphql`
   query CategoryQuery($id: String!, $locale: String!) {
     datoCmsCategory(originalId: { eq: $id }, locale: { eq: $locale }) {
+      locale
       seo {
         seoTitle: title
         seoDescription: description
@@ -88,19 +89,22 @@ export const query = graphql`
         heroAlt
       }
     }
-    allDatoCmsBlogPost(
+    allCategoryPosts: allDatoCmsBlogPost(
       filter: {
         locale: { eq: $locale }
         noTranslate: { ne: true }
         categoryLink: { originalId: { eq: $id } }
       }
+      sort: { order: ASC, fields: meta___updatedAt }
     ) {
       postNodes: nodes {
+        locale
         id: originalId
         meta {
           updatedAt
         }
         categoryLink {
+          originalId
           title
         }
         coverImage {
@@ -119,7 +123,11 @@ export const query = graphql`
         author {
           authorName: name
           picture {
-            authorImageData: gatsbyImageData(height: 30, width: 30)
+            authorImageData: gatsbyImageData(
+              height: 30
+              width: 30
+              placeholder: NONE
+            )
           }
         }
         subtitle

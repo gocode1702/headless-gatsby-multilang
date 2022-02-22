@@ -11,10 +11,8 @@ const FooterContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-
-  @media screen and (max-width: 1170px) {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: var(--globalContainer);
 
   @media screen and (max-width: 950px) {
     flex-direction: column;

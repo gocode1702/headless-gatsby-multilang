@@ -8,7 +8,7 @@ import {
 } from '../components/Layout/SharedStyles/Sections';
 import { CardImgArtDir, CategoryCard } from '../components/Layout/Blog/Cards';
 
-const CategoryTemplate = ({
+const CategoriesArchiveTemplate = ({
   data: {
     datoCmsCategoriesArchive: {
       hero: [{ heroTitle, heroSubtitle, heroAlt }],
@@ -17,44 +17,43 @@ const CategoryTemplate = ({
     allDatoCmsCategory: { categoryNodes },
   },
   pageContext,
-}) => {
-  return (
-    <PageWrapper
-      pageData={pageContext}
-      seoTitle={seo?.seoTitle}
-      seoDescription={seo?.seoDescription}
-      seoImage={seo?.seoImage?.seoImageUrl}
-    >
-      <Hero alt={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
-      <SectionWrapper backgroundColor="var(--backgroundColorAlt)">
-        <SectionContainerGridThreeCols>
-          {categoryNodes.map(({ id, title, shortDescription, coverImage }) => (
-            <CategoryCard
-              key={id}
-              recordId={id}
-              title={title}
-              description={shortDescription}
-              cardImg={
-                coverImage &&
-                CardImgArtDir(
-                  coverImage.gatsbyImageData,
-                  coverImage.squaredImage,
-                  title
-                )
-              }
-            />
-          ))}
-        </SectionContainerGridThreeCols>
-      </SectionWrapper>
-    </PageWrapper>
-  );
-};
+}) => (
+  <PageWrapper
+    pageData={pageContext}
+    seoTitle={seo?.seoTitle}
+    seoDescription={seo?.seoDescription}
+    seoImage={seo?.seoImage?.seoImageUrl}
+  >
+    <Hero alt={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
+    <SectionWrapper backgroundColor="var(--backgroundColorAlt)">
+      <SectionContainerGridThreeCols>
+        {categoryNodes.map(({ id, title, shortDescription, coverImage }) => (
+          <CategoryCard
+            key={id}
+            recordId={id}
+            title={title}
+            description={shortDescription}
+            cardImg={
+              coverImage &&
+              CardImgArtDir(
+                coverImage.gatsbyImageData,
+                coverImage.squaredImage,
+                title
+              )
+            }
+          />
+        ))}
+      </SectionContainerGridThreeCols>
+    </SectionWrapper>
+  </PageWrapper>
+);
 
-export default CategoryTemplate;
+export default CategoriesArchiveTemplate;
 
 export const query = graphql`
   query CategoriesArchiveQuery($locale: String!) {
     datoCmsCategoriesArchive(locale: { eq: $locale }) {
+      locale
       seo {
         seoTitle: title
         seoDescription: description
@@ -72,6 +71,7 @@ export const query = graphql`
       filter: { locale: { eq: $locale }, noTranslate: { ne: true } }
     ) {
       categoryNodes: nodes {
+        locale
         id: originalId
         title
         shortDescription

@@ -12,10 +12,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  @media screen and (max-width: 860px) {
-    padding: 0 var(--globalPaddingLr);
-  }
+  padding: 0 var(--globalPaddingLr);
 `;
 
 const divider = 'var(--borderSmall) solid var(--dividerColor);';
@@ -27,6 +24,8 @@ const ScrollGradientContainer = styled.div`
   padding-bottom: var(--borderRegular);
   border-top: ${divider};
   border-bottom: ${divider};
+  width: 100%;
+  max-width: var(--globalContainer);
 
   &::after {
     position: absolute;
@@ -55,10 +54,6 @@ const ScrollGradientContainer = styled.div`
             );
           `}
   }
-
-  @media screen and (max-width: 1100px) {
-    width: 100%;
-  }
 `;
 
 const GradientOverlay = styled.span``;
@@ -70,6 +65,8 @@ const NavContainer = styled.nav`
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dividerColor) var(--transparent);
+  width: 100%;
+  max-width: var(--globalContainer);
 
   &::-webkit-scrollbar {
     height: var(--scrollBarHeight);
@@ -83,10 +80,6 @@ const NavContainer = styled.nav`
     background-color: var(--dividerColor);
     border-radius: var(--scrollBarHeight);
     border: none;
-  }
-
-  @media screen and (max-width: 1100px) {
-    width: 100%;
   }
 `;
 

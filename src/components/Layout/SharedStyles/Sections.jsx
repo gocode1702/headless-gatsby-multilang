@@ -38,11 +38,8 @@ export const SectionContainerGridThreeCols = styled.div`
   grid-template-columns: repeat(3, 1fr);
   column-gap: var(--gapXL);
   row-gap: var(--gapXL);
-  width: var(--globalContainer);
-
-  @media screen and (max-width: 1170px) {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: var(--globalContainer);
 
   @media screen and (max-width: 1100px) {
     column-gap: var(--gapL);
@@ -62,10 +59,10 @@ export const SectionContainerGridTwoCols = styled.div`
   grid-template-columns: 1fr 1fr;
   column-gap: var(--gapXL);
   row-gap: var(--gapXL);
-  width: var(--articleContainer);
+  max-width: var(--articleContainer);
+  width: 100%;
 
   @media screen and (max-width: 760px) {
-    width: 100%;
     column-gap: var(--gapL);
   }
 
@@ -78,10 +75,8 @@ export const SectionContainerFlexTwoCols = styled.div`
   width: var(--globalContainer);
   display: flex;
   flex-direction: row;
-
-  @media screen and (max-width: 1170px) {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: var(--globalContainer);
 
   @media screen and (max-width: 767px) {
     flex-direction: column;
@@ -115,15 +110,15 @@ export const SectionContainerFlexTwoColsReverse = styled(
 `;
 
 export const SectionTitleContainer = styled.header`
-  width: var(--globalContainer);
   display: flex;
   align-items: center;
   margin-bottom: var(--gapXL);
   justify-content: ${({ hasButton }) => (hasButton ? 'space-between' : '')};
-
-  @media screen and (max-width: 1170px) {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: ${({ isArticleSectionHeading }) =>
+    isArticleSectionHeading
+      ? 'var(--articleContainer)'
+      : 'var(--globalContainer)'};
 
   & a:last-child {
     align-items: right;
@@ -168,7 +163,7 @@ export const Divider = styled.hr`
   border: var(--borderSmall) none;
   background: var(--dividerColor);
 
-  @media screen and (max-width: 1340px) {
+  @media screen and (max-width: 1160px) {
     left: var(--globalPaddingLr);
     width: calc(100% - calc(var(--globalPaddingLr) * 2));
   }

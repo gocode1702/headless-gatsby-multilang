@@ -19,9 +19,8 @@ const HeroContainer = styled.div`
   display: grid;
   row-gap: var(--gapXL);
   justify-content: ${({ centered }) => centered && 'center'};
-  @media screen and (max-width: 1170px) {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: var(--globalContainer);
 `;
 
 const HeroTextBox = styled.div`

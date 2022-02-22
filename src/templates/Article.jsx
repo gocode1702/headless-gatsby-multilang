@@ -21,7 +21,7 @@ import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
 import { SectionTitle } from '../components/Layout/SharedStyles/Headings';
 import { ArticleImage } from '../components/Layout/Blog/ArticleImage';
 
-const BlogPostTemplate = ({
+const ArticleTemplate = ({
   data: {
     datoCmsBlogPost: {
       id,
@@ -111,7 +111,7 @@ const BlogPostTemplate = ({
     </SectionWrapper>
     {relatedPosts.length > 0 && (
       <SectionWrapper>
-        <SectionTitleContainer css={{ maxWidth: 700 }}>
+        <SectionTitleContainer isArticleSectionHeading>
           <SectionTitle>{nextReadText}</SectionTitle>
         </SectionTitleContainer>
         <SectionContainerGridTwoCols>
@@ -155,17 +155,19 @@ const BlogPostTemplate = ({
   </PageWrapper>
 );
 
-export default BlogPostTemplate;
+export default ArticleTemplate;
 
 // Main query
 
 export const query = graphql`
-  query BlogPostTemplateQuery($id: String!, $locale: String!) {
+  query ArticleQuery($id: String!, $locale: String!) {
     datoCmsMiscTextString(locale: { eq: $locale }) {
+      locale
       updatedAtText
       nextReadText
     }
     datoCmsBlogPost(originalId: { eq: $id }, locale: { eq: $locale }) {
+      locale
       originalId
       locale
       title
@@ -218,7 +220,11 @@ export const query = graphql`
         author {
           authorName: name
           picture {
-            authorImageData: gatsbyImageData(height: 30, width: 30)
+            authorImageData: gatsbyImageData(
+              height: 30
+              width: 30
+              placeholder: NONE
+            )
           }
         }
         subtitle

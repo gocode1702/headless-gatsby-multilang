@@ -18,7 +18,7 @@ import {
 } from '../components/Layout/SharedStyles/Headings';
 import { RichText } from '../components/Layout/SharedStyles/TextContainers';
 
-const OtherPageTemplate = ({
+const OtherPagesTemplate = ({
   data: {
     datoCmsOtherPage: { seo, structuredBody },
   },
@@ -147,11 +147,12 @@ const OtherPageTemplate = ({
   </PageWrapper>
 );
 
-export default OtherPageTemplate;
+export default OtherPagesTemplate;
 
 export const query = graphql`
-  query OtherPageQuery($locale: String!, $id: String!) {
+  query OtherPagesQuery($locale: String!, $id: String!) {
     datoCmsOtherPage(locale: { eq: $locale }, originalId: { eq: $id }) {
+      locale
       seo {
         seoTitle: title
         seoDescription: description

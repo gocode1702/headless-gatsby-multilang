@@ -6,6 +6,14 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: 'gatsby-plugin-styled-components',
+      options: {
+        fileName: isDev,
+        displayName: isDev,
+        pure: true,
+      },
+    },
+    {
       resolve: 'gatsby-source-filesystem',
       options: {
         name: 'pages',
@@ -15,16 +23,6 @@ module.exports = {
     },
     'gatsby-plugin-gatsby-cloud',
     'gatsby-plugin-sitemap',
-    'gatsby-plugin-sharp',
-    'gatsby-transformer-sharp',
-    {
-      resolve: 'gatsby-plugin-styled-components',
-      options: {
-        fileName: isDev,
-        displayName: isDev,
-        pure: true,
-      },
-    },
     'gatsby-plugin-image',
     'gatsby-plugin-react-helmet',
     {

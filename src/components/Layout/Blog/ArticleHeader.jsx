@@ -271,11 +271,9 @@ export const ArticleHeader = ({
         <ImgWrapper>
           <AuthorImg
             as={!authorImg && 'div'}
-            css={{ visibility: !authorImg && 'hidden' }}
+            style={{ visibility: !authorImg && 'hidden' }}
             image={authorImg}
             alt={authorName}
-            width={30}
-            height={30}
           />
           <ArticleCover $isRtl={isRtl} image={coverImg} alt={title} />
         </ImgWrapper>

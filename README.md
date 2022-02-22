@@ -92,9 +92,9 @@ Also, you can enjoy instant previews on Gatsby Cloud, without any crazy futher c
 
 # Important notes
 
-This starter lets you to completely focus on **your content** and takes care of all the rest.
+This starter lets you completely focus on **your content** by taking care of all the rest.
 
-If you landed on this repo and your goal is just to setup a multilanguage blog with the same design and content structure of this starter (articles, category pages and archive pages) all you have to do is to follow all the steps of the [configuration](#configuration) section.
+If you landed on this repo and your goal is just to setup a multilanguage blog with the same content structure of this starter (articles, category pages and archive pages) all you have to do is to follow all the steps of the [configuration](#configuration) section.
 
 The 95% of the whole process is done directly on DatoCMS in a super-friendly environment.
 

@@ -10,14 +10,13 @@ import { easeOutTiming } from '../SharedStyles/animations';
 // Scoped styles
 
 const CardLink = styled(Navigator)`
-  width: 300px;
+  width: 100%;
   row-gap: var(--gapSmall);
   display: grid;
   height: min-content;
   justify-content: start;
 
   @media screen and (max-width: 950px) {
-    width: 100%;
     grid-template-columns: repeat(3, 1fr);
     column-gap: var(--gapRegular);
     align-items: initial;

@@ -9,7 +9,7 @@ import {
 import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
 import { CategoriesMenu } from '../components/Layout/Blog/CategoriesMenu';
 
-const BlogArchiveTemplate = ({
+const BlogRootTemplate = ({
   data: {
     datoCmsBlogRoot: {
       hero: [{ heroTitle, heroSubtitle }],
@@ -23,7 +23,7 @@ const BlogArchiveTemplate = ({
     pageData={pageContext}
     seoTitle={seo?.seoTitle}
     seoDescription={seo?.seoDescription}
-    seoImage={seo?.image?.seoImageUrl}
+    seoImage={seo?.seoImage?.seoImageUrl}
     seo
   >
     <Hero title={heroTitle} subtitle={heroSubtitle} />
@@ -66,41 +66,31 @@ const BlogArchiveTemplate = ({
   </PageWrapper>
 );
 
-export default BlogArchiveTemplate;
+export default BlogRootTemplate;
 
 // Main query
 
 export const query = graphql`
-  query BlogArchiveQuery($locale: String!) {
-    datoCmsBlogRoot(locale: { eq: $locale }) {
-      seo {
-        seoTitle: title
-        seoDescription: description
-        seoImage: image {
-          seoImageUrl: url
-        }
-      }
-      hero {
-        heroTitle
-        heroSubtitle
-      }
-    }
+  query BlogRootQuery($locale: String!) {
     allDatoCmsBlogPost(
-      sort: { order: ASC, fields: meta___updatedAt }
       filter: {
         locale: { eq: $locale }
         noTranslate: { ne: true }
         categoryLink: { noTranslate: { ne: true } }
       }
+      sort: { order: ASC, fields: meta___updatedAt }
     ) {
       blogPostNodes: nodes {
+        locale
         id: originalId
         title
         subtitle
+        noTranslate
         meta {
           updatedAt
         }
         categoryLink {
+          noTranslate
           title
         }
         coverImage {
@@ -119,9 +109,23 @@ export const query = graphql`
         author {
           authorName: name
           picture {
-            gatsbyImageData(height: 30, width: 30)
+            gatsbyImageData(height: 30, width: 30, placeholder: NONE)
           }
         }
+      }
+    }
+    datoCmsBlogRoot(locale: { eq: $locale }) {
+      locale
+      seo {
+        seoTitle: title
+        seoDescription: description
+        seoImage: image {
+          seoImageUrl: url
+        }
+      }
+      hero {
+        heroTitle
+        heroSubtitle
       }
     }
   }

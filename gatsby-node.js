@@ -181,12 +181,12 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const OtherPageTemplate = path.resolve('src/templates/OtherPage.jsx');
+  const OtherPagesTemplate = path.resolve('src/templates/OtherPages.jsx');
 
   otherPagesNodes.forEach(({ locale, slug, id }) => {
     createPage({
       path: locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`,
-      component: OtherPageTemplate,
+      component: OtherPagesTemplate,
       context: {
         id,
         locale,

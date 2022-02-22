@@ -16,7 +16,7 @@ import { RichText } from '../components/Layout/SharedStyles/TextContainers';
 import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
 import { Navigator } from '../components/LanguageHelpers/Navigator';
 
-const HomePageTemplate = ({
+const HomepageTemplate = ({
   data: {
     datoCmsHomepage: {
       seo,
@@ -25,7 +25,7 @@ const HomePageTemplate = ({
       featuredPostsTitle,
     },
     datoCmsBlogRoot: { id },
-    allDatoCmsBlogPost: { postNodes },
+    allBlogPosts: { postNodes },
     datoCmsMiscTextString: { seeAllButton, seeAllPosts },
   },
   pageContext,
@@ -78,7 +78,7 @@ const HomePageTemplate = ({
               subtitle,
               author: {
                 authorName,
-                picture: { authorImageData, authorImageAlt },
+                picture: { authorImageData },
               },
               categoryLink,
             }) => (
@@ -109,10 +109,10 @@ const HomePageTemplate = ({
   </PageWrapper>
 );
 
-export default HomePageTemplate;
+export default HomepageTemplate;
 
 export const query = graphql`
-  query HomePageTemplate($locale: String!) {
+  query HomepageQuery($locale: String!) {
     datoCmsHomepage(locale: { eq: $locale }) {
       locale
       seo {
@@ -135,19 +135,21 @@ export const query = graphql`
       featuredPostsTitle
     }
     datoCmsBlogRoot(locale: { eq: $locale }) {
+      locale
       id: originalId
     }
-    allDatoCmsBlogPost(
-      sort: { order: ASC, fields: meta___updatedAt }
+    allBlogPosts: allDatoCmsBlogPost(
       filter: {
         locale: { eq: $locale }
         featuredInHomepage: { eq: true }
         noTranslate: { ne: true }
         categoryLink: { noTranslate: { ne: true } }
       }
+      sort: { order: ASC, fields: meta___updatedAt }
       limit: 6
     ) {
       postNodes: nodes {
+        locale
         id: originalId
         meta {
           updatedAt
@@ -155,7 +157,6 @@ export const query = graphql`
         categoryLink {
           title
         }
-
         coverImage {
           gatsbyImageData(
             width: 300
@@ -172,7 +173,11 @@ export const query = graphql`
         author {
           authorName: name
           picture {
-            authorImageData: gatsbyImageData(height: 30, width: 30)
+            authorImageData: gatsbyImageData(
+              height: 30
+              width: 30
+              placeholder: NONE
+            )
           }
         }
         subtitle
@@ -180,6 +185,7 @@ export const query = graphql`
       }
     }
     datoCmsMiscTextString(locale: { eq: $locale }) {
+      locale
       seeAllButton
       seeAllPosts
     }
