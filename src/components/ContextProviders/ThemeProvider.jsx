@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect, useCallback } from 'react';
+import { useState, createContext, useCallback, useEffect } from 'react';
 
 import {
   STORAGE_DARK_THEME_VALUE,
@@ -17,7 +17,6 @@ import {
 const ThemeContext = createContext({});
 
 const ThemeProvider = ({ children }) => {
-  const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(() => {
     if (!isSSR) {
       if (!localStorage.theme) {
@@ -54,12 +53,8 @@ const ThemeProvider = ({ children }) => {
   }, [isDark]);
 
   useEffect(() => {
-    setIsMounted(true);
+    document.body.style.display = '';
   }, []);
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <ThemeContext.Provider value={{ isDark, handleDarkModeSwitch }}>
